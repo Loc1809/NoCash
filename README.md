@@ -1,2 +1,0 @@
-# NoCash
- Do An Mobile

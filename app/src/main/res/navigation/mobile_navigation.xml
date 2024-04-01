@@ -7,43 +7,43 @@
 
     <fragment
             android:id="@+id/navigation_home"
-            android:name="com.example.nocash.ui.home.HomeFragment"
+            android:name="com.org.cash.ui.home.HomeFragment"
             android:label="@string/title_home"
             tools:layout="@layout/fragment_home"/>
 
     <fragment
             android:id="@+id/navigation_profile"
-            android:name="com.example.nocash.ui.profile.ProfileFragment"
+            android:name="com.org.cash.ui.profile.ProfileFragment"
             android:label="@string/title_profile"
             tools:layout="@layout/fragment_profile"/>
 
     <fragment
             android:id="@+id/navigation_statistics"
-            android:name="com.example.nocash.ui.statistics.StatisticsFragment"
+            android:name="com.org.cash.ui.statistics.StatisticsFragment"
             android:label="@string/title_statistics"
             tools:layout="@layout/fragment_statistics"/>
 
     <fragment
             android:id="@+id/navigation_add_record"
-            android:name="com.example.nocash.ui.add_record.AddRecordFragment"
+            android:name="com.org.cash.ui.add_record.AddRecordFragment"
             android:label="@string/title_add_record"
             tools:layout="@layout/fragment_add_record"/>
 
     <fragment
             android:id="@+id/navigation_budget"
-            android:name="com.example.nocash.ui.budget.BudgetFragment"
+            android:name="com.org.cash.ui.budget.BudgetFragment"
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_budget"/>
 
     <fragment
             android:id="@+id/fragment_profile_main"
-            android:name="com.example.nocash.ui.profile.ProfileMain"
+            android:name="com.org.cash.ui.profile.ProfileMain"
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_profile_main"/>
 
     <fragment
             android:id="@+id/profile_navigation_my_account"
-            android:name="com.example.nocash.ui.budget.BudgetFragment"
+            android:name="com.org.cash.ui.budget.BudgetFragment"
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_budget">
     <action
@@ -53,17 +53,17 @@
     </fragment>
     <fragment
             android:id="@+id/profile_navigation_setting"
-            android:name="com.example.nocash.ui.budget.BudgetFragment"
+            android:name="com.org.cash.ui.budget.BudgetFragment"
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_budget"/>
     <fragment
             android:id="@+id/profile_navigation_help_center"
-            android:name="com.example.nocash.ui.budget.BudgetFragment"
+            android:name="com.org.cash.ui.budget.BudgetFragment"
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_budget"/>
     <fragment
             android:id="@+id/profile_navigation_contact"
-            android:name="com.example.nocash.ui.budget.BudgetFragment"
+            android:name="com.org.cash.ui.budget.BudgetFragment"
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_budget"/>
 
