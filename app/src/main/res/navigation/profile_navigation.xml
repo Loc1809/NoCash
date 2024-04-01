@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/profile_navigation"
+            app:startDestination="@+id/fragment_profile_main">
+
+<!--    <fragment-->
+<!--            android:id="@+id/fragment_profile_main"-->
+<!--            android:name="com.example.nocash.ui.profile.ProfileMain"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_profile_main" />-->
+
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_my_account"-->
+<!--            android:name="com.example.nocash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget" />-->
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_setting"-->
+<!--            android:name="com.example.nocash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget" />-->
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_help_center"-->
+<!--            android:name="com.example.nocash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget" />-->
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_contact"-->
+<!--            android:name="com.example.nocash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget" />-->
+</navigation>

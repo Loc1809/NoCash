@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/bottom_nav_color">
+
+    <!--    Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/home_header"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/bottom_nav_color"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/home_1st_header"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/home_2nd_header"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+        >
+            <ImageView
+                    android:layout_height="match_parent"
+                    android:layout_width="50dp"
+                    android:src="@drawable/baseline_menu_24"
+                    android:paddingEnd="10dp"
+                    android:contentDescription="@string/menu"
+                    tools:ignore="RtlSymmetry"
+                    app:layout_constraintStart_toStartOf="parent"
+            />
+        </LinearLayout>
+        <!--            <LinearLayout -->
+        <!--                    android:layout_width="" -->
+        <!--                    android:layout_height=""-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/home_2nd_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/home_1st_header"
+                android:paddingLeft="50dp"
+        >
+            <LinearLayout
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:id="@+id/home_header_content"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:layout_editor_absoluteY="81dp"
+                    tools:layout_editor_absoluteX="1dp">
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Hello, "
+                            android:fontFamily="@string/font_family"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:capitalize="sentences"
+                            tools:ignore="Deprecated"/>
+                    <TextView
+                            android:id="@+id/home_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@string/font_family"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:capitalize="sentences"
+                            android:text="test"
+                            android:textStyle="bold"/>
+                </LinearLayout>
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:orientation="horizontal">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:text="Total balance:"
+                            android:textColor="@color/white"
+                            android:paddingTop="5dp"
+                            android:fontFamily="@string/font_family"/>
+                    <TextView
+                            android:id="@+id/home_balance_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/white"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="5dp"
+                            android:fontFamily="@string/font_family"
+                            android:text="0 Đ"/>
+                    <ImageView
+                            android:id="@+id/home_visible_balance_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="3dp"
+                            android:src="@drawable/baseline_visibility_24"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/baseline_circle_notifications_24"
+                />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    BODY -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintTop_toBottomOf="@id/home_header">
+
+        <!--    Wallet    -->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My wallet"
+                    android:fontFamily="@string/font_family"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:capitalize="sentences"
+                    tools:ignore="Deprecated"/>
+
+        </LinearLayout>
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_wallet_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_recycle_wallet"/>
+        </androidx.cardview.widget.CardView>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
