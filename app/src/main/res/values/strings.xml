@@ -28,4 +28,9 @@
     <string name="setting">Setting</string>
     <string name="help_center">Help center</string>
     <string name="contact">Contact</string>
+    <string name="reset_password">Reset password</string>
+    <string name="notifications">notifications</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="back_to_menu">Back to profile menu</string>
+    <string name="back_to_setting">Back to setting</string>
 </resources>

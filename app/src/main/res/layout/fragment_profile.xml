@@ -4,9 +4,485 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".ui.profile.ProfileFragment" android:background="#3723EC">
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                android:background="#FFFFFF"
+                android:visibility="invisible"
+                android:id="@+id/header_back_to_main">
+            <com.google.android.material.navigation.NavigationView
+                    android:id="@+id/profile_back_to_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:menu="@menu/profile_back_to_main_nav_menu"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_account_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#FFFFFF"
+                android:visibility="invisible" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/profile_setting_fragment"
+                app:layout_constraintBottom_toBottomOf="@+id/profile_setting_fragment"
+                app:layout_constraintTop_toBottomOf="@+id/header_back_to_main">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+                            <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+
+
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+                                        <ImageView
+                                                android:src="@drawable/baseline_person_outline_24"
+                                                android:layout_width="103dp"
+                                                android:layout_height="121dp" android:id="@+id/imageView"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"/>
+                                        <ImageButton
+                                                android:src="@android:drawable/ic_menu_camera"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/imageButton"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.623"
+                                                app:layout_constraintVertical_bias="0.989"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                        <TextView
+                                                android:text="Name"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView8"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.149"
+                                                app:layout_constraintVertical_bias="0.374"/>
+                                        <TextView
+                                                android:text="Nguyen Minh Hoang"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView7"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.19"
+                                                app:layout_constraintVertical_bias="0.603"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+                                        <TextView
+                                                android:text="Email"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView9"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.149"
+                                                app:layout_constraintVertical_bias="0.374"/>
+                                        <TextView
+                                                android:text="Hoang8ctt@gmail.com"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView10"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.19"
+                                                app:layout_constraintVertical_bias="0.618"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+                                        <TextView
+                                                android:text="Phone Number"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView11"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.149"
+                                                app:layout_constraintVertical_bias="0.374"/>
+                                        <TextView
+                                                android:text="0965129501"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView12"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintHorizontal_bias="0.19"
+                                                app:layout_constraintVertical_bias="0.618"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                        <Button
+                                                android:text="Save"
+                                                app:cardCornerRadius="64dp"
+                                                android:layout_width="356dp"
+                                                android:layout_height="68dp" android:id="@+id/button2"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+                            </LinearLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#FFFFFF"
+                android:visibility="invisible" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_back_to_main">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+                            <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+
+
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="330dp">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                        <com.google.android.material.navigation.NavigationView
+                                                android:id="@+id/profile_setting_01_nav_view"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="0dp"
+                                                app:menu="@menu/profile_setting_nav_menu"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toBottomOf="@+id/textView92"/>
+                                        <TextView
+                                                android:text="General"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView92"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                android:layout_marginTop="16dp"
+                                                app:layout_constraintHorizontal_bias="0.032"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                        <com.google.android.material.navigation.NavigationView
+                                                android:id="@+id/profile_setting_02_nav_view"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="0dp"
+                                                app:menu="@menu/profile_setting_2_nav_menu"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toBottomOf="@+id/textView102"/>
+                                        <TextView
+                                                android:text="Security"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content" android:id="@+id/textView102"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                android:layout_marginTop="16dp"
+                                                app:layout_constraintHorizontal_bias="0.032"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="110dp">
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                        <Button
+                                                android:text="Logout"
+                                                app:cardCornerRadius="64dp"
+                                                android:layout_width="356dp"
+                                                android:layout_height="68dp" android:id="@+id/button3"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"/>
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </androidx.cardview.widget.CardView>
+                            </LinearLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                android:background="#FFFFFF"
+                android:visibility="invisible"
+                android:id="@+id/header_back_to_setting">
+            <com.google.android.material.navigation.NavigationView
+                    android:id="@+id/profile_back_to_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:menu="@menu/profile_back_to_setting_nav_menu"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_setting_password_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#FFFFFF"
+                android:visibility="invisible" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_back_to_setting">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            <EditText
+                                    android:layout_width="315dp"
+                                    android:layout_height="49dp"
+                                    android:inputType="textPassword"
+                                    android:ems="10"
+                                    android:id="@+id/editTextTextPassword_Old" app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="12dp"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView83"/>
+                            <TextView
+                                    android:text="Old password"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" android:id="@+id/textView83"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.149"
+                                    app:layout_constraintVertical_bias="0.374"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            <EditText
+                                    android:layout_width="315dp"
+                                    android:layout_height="49dp"
+                                    android:inputType="textPassword"
+                                    android:ems="10"
+                                    android:id="@+id/editTextTextPassword_New" app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="12dp"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView93"/>
+                            <TextView
+                                    android:text="New password"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" android:id="@+id/textView93"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.149"
+                                    app:layout_constraintVertical_bias="0.374"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            <EditText
+                                    android:layout_width="315dp"
+                                    android:layout_height="49dp"
+                                    android:inputType="textPassword"
+                                    android:ems="10"
+                                    android:id="@+id/editTextTextPassword_ReType" app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="12dp"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView103"/>
+                            <TextView
+                                    android:text="Retype new password"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" android:id="@+id/textView103"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.149"
+                                    app:layout_constraintVertical_bias="0.374"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                            <Button
+                                    android:text="Save"
+                                    app:cardCornerRadius="64dp"
+                                    android:layout_width="356dp"
+                                    android:layout_height="68dp" android:id="@+id/button4"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_main_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp" app:layout_constraintTop_toTopOf="parent"
@@ -21,6 +497,7 @@
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.175"
                     app:layout_constraintVertical_bias="0.505"/>
+
             <TextView
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
@@ -30,6 +507,7 @@
                     app:layout_constraintStart_toEndOf="@+id/imageView4"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="72dp" app:layout_constraintHorizontal_bias="0.502"/>
+
             <TextView
                     android:textSize="10sp"
                     android:textColor="@android:color/white"
@@ -40,23 +518,15 @@
                     app:layout_constraintStart_toEndOf="@+id/imageView4" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2" app:layout_constraintHorizontal_bias="0.505"
                     app:layout_constraintVertical_bias="0.0"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp" app:layout_constraintTop_toBottomOf="@+id/cs1"
                 android:id="@+id/cs2" android:layout_marginTop="4dp" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.google.android.material.navigation.NavigationView
-                    app:menu="@menu/profile_nav_menu"
-                    android:layout_width="match_parent"
-                    android:id="@+id/profile_nav_view"
-                    android:layout_height="0dp" app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cardView2"
-                    app:layout_constraintStart_toStartOf="@+id/cardView2"
-                    app:layout_constraintEnd_toEndOf="@+id/cardView2" android:layout_marginTop="20dp">
-
-            </com.google.android.material.navigation.NavigationView>
 
             <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -66,13 +536,25 @@
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent" android:id="@+id/cardView2">
 
-                <View
-                        android:layout_width="wrap_content"
-                        app:cardCornerRadius="32dp"
-                        android:layout_height="wrap_content" android:id="@+id/view3"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    <com.google.android.material.navigation.NavigationView
+                            app:menu="@menu/profile_nav_menu"
+                            android:layout_width="match_parent"
+                            android:id="@+id/profile_nav_view"
+                            android:layout_height="505dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" android:background="#FFFFFF"
+                            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0">
+                    </com.google.android.material.navigation.NavigationView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
-
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -35,37 +35,37 @@
             android:label="@string/title_budget"
             tools:layout="@layout/fragment_budget"/>
 
-    <fragment
-            android:id="@+id/fragment_profile_main"
-            android:name="com.org.cash.ui.profile.ProfileMain"
-            android:label="@string/title_budget"
-            tools:layout="@layout/fragment_profile_main"/>
+<!--    <fragment-->
+<!--            android:id="@+id/fragment_profile_main"-->
+<!--            android:name="com.org.cash.ui.profile.ProfileMain"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_profile_main"/>-->
 
-    <fragment
-            android:id="@+id/profile_navigation_my_account"
-            android:name="com.org.cash.ui.budget.BudgetFragment"
-            android:label="@string/title_budget"
-            tools:layout="@layout/fragment_budget">
-    <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/fragment_profile_main"/>
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_my_account"-->
+<!--            android:name="com.org.cash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget">-->
+<!--    <action-->
+<!--            android:id="@+id/action_FirstFragment_to_SecondFragment"-->
+<!--            app:destination="@id/fragment_profile_main"/>-->
 
-    </fragment>
-    <fragment
-            android:id="@+id/profile_navigation_setting"
-            android:name="com.org.cash.ui.budget.BudgetFragment"
-            android:label="@string/title_budget"
-            tools:layout="@layout/fragment_budget"/>
-    <fragment
-            android:id="@+id/profile_navigation_help_center"
-            android:name="com.org.cash.ui.budget.BudgetFragment"
-            android:label="@string/title_budget"
-            tools:layout="@layout/fragment_budget"/>
-    <fragment
-            android:id="@+id/profile_navigation_contact"
-            android:name="com.org.cash.ui.budget.BudgetFragment"
-            android:label="@string/title_budget"
-            tools:layout="@layout/fragment_budget"/>
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_setting"-->
+<!--            android:name="com.org.cash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget"/>-->
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_help_center"-->
+<!--            android:name="com.org.cash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget"/>-->
+<!--    <fragment-->
+<!--            android:id="@+id/profile_navigation_contact"-->
+<!--            android:name="com.org.cash.ui.budget.BudgetFragment"-->
+<!--            android:label="@string/title_budget"-->
+<!--            tools:layout="@layout/fragment_budget"/>-->
 
     <!--    <fragment-->
     <!--        android:id="@+id/navigation_dashboard"-->
