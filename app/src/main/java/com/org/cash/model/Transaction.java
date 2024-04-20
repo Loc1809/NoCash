@@ -111,7 +111,7 @@ public class Transaction {
     }
 
     public int getUser() {
-        return user.id;
+        return user.getId();
     }
 
 //    public User getUserInfo() { return this.user; }

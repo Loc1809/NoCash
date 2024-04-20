@@ -1,51 +1,32 @@
 package com.org.cash.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import javax.persistence.*;
 
-@Entity
-@TableGenerator(name = "tableGeneratorUser", table = "id_generator", pkColumnName = "entity",
-        valueColumnName = "next_id", pkColumnValue = "User", allocationSize = 1)
-@Table(name = "user")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGeneratorUser")
-
-    @Column(name = "id")
-    int id;
-
-    @Column(name = "username")
-    String username;
-
-    @Column(name = "password")
-    String password; // encoded password
-
-    @Column(name = "phone_number")
-    String phoneNumber;
-
-    @Column(name = "email")
-    String email;
-
-    @Column(name = "name")
-    String name;
-
-    @Column(name = "identify_code")
-    String identifyCode;
-
-    @Column(name = "date_of_birth")
-    String dateOfBirth; // stored date as string
-
-    @Column(name = "role")
-    String role;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    User parent;
-
-    @Column(name = "money")
-    Double money;
-
-    @Column(name = "enabled")
-    Boolean enabled;
+    @SerializedName("id")
+    private int id;
+    @SerializedName("username")
+    private String username;
+    @SerializedName("password")
+    private String password;
+    @SerializedName("phone_number")
+    private String phoneNumber;
+    @SerializedName("email")
+    private String email;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("identify_code")
+    private String identifyCode;
+    @SerializedName("date_of_birth")
+    private String dateOfBirth;
+    @SerializedName("role")
+    private String role;
+    @SerializedName("money")
+    private Float money;
+    @SerializedName("enabled")
+    private Boolean enabled;
 
     public User(String username, String password) {
         this.username = username;
@@ -74,33 +55,13 @@ public class User {
         this.enabled = active;
     }
 
-    public User parent(){return parent;}
 
-    public String getParent(){
-        try {
-            return parent.getName();
-        } catch (Exception e) {
-            return "";
-        }
-    }
 
-    public int parentId() {
-        try {
-            return parent.getId();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public void setParent(User parent) {
-        this.parent = parent;
-    }
-
-    public Double getMoney() {
+    public Float getMoney() {
         return money;
     }
 
-    public void setMoney(Double money) {
+    public void setMoney(Float money) {
         this.money = money;
     }
 
@@ -128,8 +89,8 @@ public class User {
         this.username = username;
     }
 
-    public String password(){
-        return this.password;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
@@ -176,3 +137,4 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 }
+
