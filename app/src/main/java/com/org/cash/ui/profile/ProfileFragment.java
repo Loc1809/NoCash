@@ -4,38 +4,59 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import com.org.cash.API.ApiService;
-import com.org.cash.API.FetchDataAsyncTask;
 import com.org.cash.R;
 
 import com.google.android.material.navigation.NavigationView;
+import com.org.cash.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 
 public class ProfileFragment extends Fragment {
+
+    String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbW1JPTEVfdXNlcl1dIiwidXNlcm5hbWUiOiJsb2N0ZXN0MyIsImV4cCI6MTcxNDAwNTEwMX0.iY6Ce7SN6tRcwstxc2DmKds9cQV70EvmkWNBIxAfabFHOVm_PUI1C3b4HWTG02TMxKT7HE3jEb6Cl24mU81d1Q";
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    ApiService apiService = retrofit.create(ApiService.class);
+
+    User user;
+
+    private TextView name;
+    private TextView mail;
     private EditText editText_Name;
-    private ApiService apiService;
+    private EditText editText_Email;
+    private EditText editText_Phone;
+    private Button save;
+
+//    private EditText editText_Name;
+//    private EditText editText_Email;
+//    private EditText editText_Phone;
+//
+//    private Button save;
 
     public ProfileFragment() {
+    }
+
+    public void onButtonClick_save_account(View view) {
+
     }
 
     public static ProfileFragment newInstance(String param1, String param2) {
@@ -87,35 +108,63 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        this.name = view.findViewById(R.id.textView2);
+        this.mail = view.findViewById(R.id.textView3);
         this.editText_Name = view.findViewById(R.id.editText_Name);
+        this.editText_Email = view.findViewById(R.id.editText_Email);
+        this.editText_Phone = view.findViewById(R.id.editText_Phone);
+        this.save = view.findViewById(R.id.button2);
+        save.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                user.setName(String.valueOf(editText_Name.getText()));
+                user.setEmail(String.valueOf(editText_Email.getText()));
+                user.setPhoneNumber(editText_Phone.getText().toString());
+                //Log.e("ProfileFragment", "Error: " + editText_Phone.getText());
+                AtomicReference<Call<User>> call = new AtomicReference<>(apiService.updateData(user, token));
+                call.get().enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                      //  User resource = response.body();
+                        try{
+                            if(response.code()==200)
+                            showToast("Update successful");
+                            else{
+                                showToast("UPDATE NOT SUCCESSFUL");
+                            }
+                        }
+                        catch (Exception e){
+                            showToast("Update not successful");
+                        }
+                    }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://127.0.0.1:8080/user/current/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        // Tạo đối tượng dịch vụ API
-        apiService = retrofit.create(ApiService.class);
-        Call<Object> call = apiService.fetchData();
-        call.enqueue(new Callback<Object>() {
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        //throw new RuntimeException(t);
+                        showToast("Update not successful");
+                        call.cancel();
+                    }
+                });
+            }
+        });
+
+        AtomicReference<Call<User>> call = new AtomicReference<>(apiService.fetchData(token));
+        call.get().enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
+                User resource = response.body();
 
-
-                Log.d("TAG",response.code()+"");
-
-                String displayResponse = "";
-
-                Object resource = response.body();
-
-                editText_Name.setText("fdfdgfdv");
-
+                user = resource;
+                name.setText(resource.getUsername());
+                mail.setText(resource.getEmail());
+                editText_Name.setText(resource.getUsername());
+                editText_Email.setText(resource.getEmail());
+                editText_Phone.setText(resource.getPhoneNumber());
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 call.cancel();
             }
         });
@@ -158,7 +207,7 @@ public class ProfileFragment extends Fragment {
             if (itemId == R.id.profile_setting_password) {
                 hidenSettingNav(view);
                 view.findViewById(R.id.profile_setting_password_fragment).setVisibility(View.VISIBLE);
-            } else if(itemId == R.id.profile_setting_notification){
+            } else if (itemId == R.id.profile_setting_notification) {
 //                hidenMainNav(view);
 //                view.findViewById(R.id.profile_account_fragment).setVisibility(View.VISIBLE);
             }
@@ -168,8 +217,26 @@ public class ProfileFragment extends Fragment {
         mainNavigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.profile_navigation_my_account) {
+
+                call.set(apiService.fetchData(token));
+                call.get().enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        User resource = response.body();
+                        user = resource;
+                        editText_Name.setText(resource.getName());
+                        editText_Email.setText(resource.getEmail());
+                        editText_Phone.setText(resource.getPhoneNumber());
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        call.cancel();
+                    }
+                });
                 hidenMainNav(view);
                 view.findViewById(R.id.profile_account_fragment).setVisibility(View.VISIBLE);
+
             } else if (itemId == R.id.profile_navigation_setting) {
                 hidenMainNav(view);
                 view.findViewById(R.id.profile_setting_fragment).setVisibility(View.VISIBLE);
@@ -190,18 +257,9 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    public void fetchDataFromApi() {
 
-        new FetchDataAsyncTask(apiService, this).execute();
-    }
-
-    public void handleData(Object responseData) {
-        // Xử lý dữ liệu trả về ở đây
-        this.editText_Name.setText(responseData.toString());
-    }
-    public void handleDacta() {
-        // Xử lý dữ liệu trả về ở đây
-        this.editText_Name.setText("HEjfifiornogr");
+    private void showToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 }

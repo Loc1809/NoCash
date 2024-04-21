@@ -11,7 +11,6 @@ public class User {
     private String username;
     @SerializedName("password")
     private String password;
-    @SerializedName("phone_number")
     private String phoneNumber;
     @SerializedName("email")
     private String email;
