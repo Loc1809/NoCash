@@ -1,76 +1,45 @@
 package com.org.cash.model;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+
 import java.util.List;
 
-@Entity
-//@TableGenerator(name = "tableGeneratorCategory", table = "id_generator", pkColumnName = "entity",
-//        valueColumnName = "next_id", pkColumnValue = "Category", allocationSize = 1)
-//@Table(name = "category")
+@Entity(tableName = "category")
 public class Category {
-//    @Id
-    @PrimaryKey
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGeneratorCategory")
-//    @Column(name = "id")
-    int id;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int id;
 
     @ColumnInfo(name = "name")
-    String name;
+    private String name;
 
     @ColumnInfo(name = "type")
-    int type;
+    private int type;
 
-//    @ManyToMany
-//    @JoinColumn(name = "child", nullable = true)
-//    List<Category> child;
+    @ColumnInfo(name = "parentId")
+    public int parentId;
 
-//    @OneToOne
-//    @JoinColumn(name = "user", nullable = true)
-    @ColumnInfo(name = "user")
-    int user;
+    @Ignore
+    public List<Category> child;
+
+    @Ignore
+    private int user;
 
     @ColumnInfo(name = "active")
-    Boolean active;
+    private Boolean active;
 
     @ColumnInfo(name = "icon")
-    String icon;
+    private String icon;
 
-    public Category() {
-    }
-
-    public Category(String name, int type, List<Category> parent, int user, String icon) {
+    public Category(String name, int type, String icon) {
         this.name = name;
         this.type = type;
-//        this.child = parent;
-        this.user = user;
         this.active = true;
-        this.icon = icon;
-    }
-
-//    public List<Category> getChild() {
-//        return child;
-//    }
-//
-//    public void setChild(List<Category> child) {
-//        this.child = child;
-//    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
         this.icon = icon;
     }
 
@@ -90,27 +59,43 @@ public class Category {
         this.name = name;
     }
 
-    public String getType() {
-                if (type == 0)
-            return "income";
-        return "outcome";
+    public int getType() {
+        return type;
     }
 
     public void setType(int type) {
         this.type = type;
     }
 
+    public List<Category> getChild() {
+        return child;
+    }
+
+    public void setChild(List<Category> child) {
+        this.child = child;
+    }
+
     public int getUser() {
         return user;
     }
-
-//    public User getUserInfo() { return this.user; }
 
     public void setUser(int user) {
         this.user = user;
     }
 
-//    public void addChildCategory(Category category) {
-//        this.child.add(category);
-//    }
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 }

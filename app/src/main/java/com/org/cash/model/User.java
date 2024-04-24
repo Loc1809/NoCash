@@ -1,50 +1,45 @@
 package com.org.cash.model;
 
-import javax.persistence.*;
 
-@Entity
-@TableGenerator(name = "tableGeneratorUser", table = "id_generator", pkColumnName = "entity",
-        valueColumnName = "next_id", pkColumnValue = "User", allocationSize = 1)
-@Table(name = "user")
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "user")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGeneratorUser")
-
-    @Column(name = "id")
+    @PrimaryKey
+    @ColumnInfo(name="id")
     int id;
 
-    @Column(name = "username")
+    @ColumnInfo(name = "username")
     String username;
 
-    @Column(name = "password")
+    @ColumnInfo(name = "password")
     String password; // encoded password
 
-    @Column(name = "phone_number")
+    @ColumnInfo(name = "phone_number")
     String phoneNumber;
 
-    @Column(name = "email")
+    @ColumnInfo(name = "email")
     String email;
 
-    @Column(name = "name")
+    @ColumnInfo(name = "name")
     String name;
 
-    @Column(name = "identify_code")
+    @ColumnInfo(name = "identify_code")
     String identifyCode;
 
-    @Column(name = "date_of_birth")
+    @ColumnInfo(name = "date_of_birth")
     String dateOfBirth; // stored date as string
 
-    @Column(name = "role")
+    @ColumnInfo(name = "role")
     String role;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    User parent;
-
-    @Column(name = "money")
+    @ColumnInfo(name = "money")
     Double money;
 
-    @Column(name = "enabled")
+    @ColumnInfo(name = "enabled")
     Boolean enabled;
 
     public User(String username, String password) {
@@ -74,27 +69,27 @@ public class User {
         this.enabled = active;
     }
 
-    public User parent(){return parent;}
+//    public User parent(){return parent;}
 
-    public String getParent(){
-        try {
-            return parent.getName();
-        } catch (Exception e) {
-            return "";
-        }
-    }
+//    public String getParent(){
+//        try {
+//            return parent.getName();
+//        } catch (Exception e) {
+//            return "";
+//        }
+//    }
+//
+//    public int parentId() {
+//        try {
+//            return parent.getId();
+//        } catch (Exception e) {
+//            return 0;
+//        }
+//    }
 
-    public int parentId() {
-        try {
-            return parent.getId();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public void setParent(User parent) {
-        this.parent = parent;
-    }
+//    public void setParent(User parent) {
+//        this.parent = parent;
+//    }
 
     public Double getMoney() {
         return money;

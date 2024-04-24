@@ -24,11 +24,40 @@
             tools:layout="@layout/fragment_statistics"/>
 
     <fragment
+            android:id="@+id/navigation_add_record_activity"
+            android:label="@string/title_add_record"
+            tools:layout="@layout/activity_add_transaction">
+            <action
+            android:id="@+id/navigation_add_transaction"
+            app:destination="@id/navigation_add_transaction"/>
+            <action
+            android:id="@+id/navigation_add_wallet"
+            app:destination="@id/navigation_add_wallet"/>
+    </fragment>
+
+    <fragment
             android:id="@+id/navigation_add_record"
             android:name="com.org.cash.ui.add_record.AddRecordFragment"
             android:label="@string/title_add_record"
-            tools:layout="@layout/fragment_add_record"/>
+            tools:layout="@layout/fragment_add_record">
+            <action
+            android:id="@+id/navigation_add_transaction"
+            app:destination="@id/navigation_add_transaction"/>
+            <action
+            android:id="@+id/navigation_add_wallet"
+            app:destination="@id/navigation_add_wallet"/>
+    </fragment>
 
+    <fragment
+            android:id="@+id/navigation_add_transaction"
+            android:name="com.org.cash.ui.add_record.AddTransactionFragment"
+            android:label="@string/title_budget"
+            tools:layout="@layout/fragment_add_transaction"/>
+    <fragment
+            android:id="@+id/navigation_add_wallet"
+            android:name="com.org.cash.ui.add_record.AddWalletFragment"
+            android:label="@string/title_budget"
+            tools:layout="@layout/fragment_add_wallet"/>
     <fragment
             android:id="@+id/navigation_budget"
             android:name="com.org.cash.ui.budget.BudgetFragment"

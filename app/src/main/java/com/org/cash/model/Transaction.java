@@ -1,73 +1,51 @@
 package com.org.cash.model;
 
-import android.os.Build;
-
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-import javax.persistence.*;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-@Entity
-@TableGenerator(name = "tableGeneratorTransaction", table = "id_generator", pkColumnName = "entity",
-        valueColumnName = "next_id", pkColumnValue = "Transaction", allocationSize = 1)
-@Table(name = "transaction")
+@Entity(tableName = "trans")
 public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tableGeneratorTransaction")
-    @Column(name = "id")
-    int id;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int id;
 
-    @Column(name = "amount")
-    Double amount;
+    @ColumnInfo(name = "amount")
+    private Double amount;
 
-    @Column(name = "time")
-    String time;
+    @ColumnInfo(name = "time")
+    private Long time;
 
-    @Column(name = "desc")
-    String desc;
+    @ColumnInfo(name = "desc")
+    private String desc;
 
-    @Column(name = "direction")
-    int direction;
-//    0 income, 1 outcome
+    @ColumnInfo(name = "wallet")
+    private String wallet;
 
-    @OneToOne
-    @JoinColumn(name = "category")
-    Category category;
+    @ColumnInfo(name = "direction")
+    private int direction; // 0 for income, 1 for outcome
 
-    @OneToOne
-    @JoinColumn(name = "user")
-    User user;
+    @ColumnInfo(name = "category")
+    private String category; // Foreign key referencing Category table
 
-    @Column(name = "active")
-    Boolean active;
+    @Ignore
+    private User user;
 
-    public Transaction() {
-    }
+    @ColumnInfo(name = "active")
+    private Boolean active;
 
-    public Transaction(Double amount, String time, String desc, Category category, User user, int direction) {
+    public Transaction(Double amount, Long time, String desc, String category, int direction) {
         this.amount = amount;
         this.time = time;
         this.desc = desc;
         this.category = category;
-        this.user = user;
         this.direction = direction;
         this.active = true;
-    }
-
-    public Transaction(int id, Double amount, String time, String desc, Category category, User user) {
-        this.id = id;
-        this.amount = amount;
-        this.time = time;
-        this.desc = desc;
-        this.category = category;
-        this.user = user;
-//        this.transactionSource = transactionSource;
-    }
-
-    public String getIcon(){
-        return this.category.getIcon();
     }
 
     public Boolean getActive() {
@@ -94,11 +72,15 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getTime() {
-        return convertEpochToDateString(Long.parseLong(this.time));
+    public String getTimeString() {
+        return convertEpochToDateString(this.time);
     }
 
-    public void setTime(String time) {
+    public Long getTime() {
+        return this.time;
+    }
+
+    public void setTime(Long time) {
         this.time = time;
     }
 
@@ -110,14 +92,22 @@ public class Transaction {
         this.desc = desc;
     }
 
-    public int getUser() {
-        return user.id;
+    public User getUser() {
+        return user;
     }
 
 //    public User getUserInfo() { return this.user; }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(String wallet) {
+        this.wallet = wallet;
     }
 
     public int direction(){
@@ -139,29 +129,27 @@ public class Transaction {
     }
 
     public String getCategory() {
-        return this.category.getName();
+        return this.category;
     }
 
     public void setCategory(Category category) {
-        this.category = category;
+        this.category = category.getName();
     }
 
-    //    public int getTransactionSource() {
-//        return transactionSource;
-//    }
-//
-//    public void setTransactionSource(int transactionSource) {
-//        this.transactionSource = transactionSource;
-//    }
 
-    public String convertEpochToDateString(Long epoch){
-        DateTimeFormatter dtf = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public String convertEpochToDateString(Long epoch) {
+        if (epoch == null) {
+            return null;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return Instant.ofEpochMilli(epoch).atZone(ZoneId.systemDefault()).toLocalDateTime().format(dtf);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = new Date(epoch);
+            return sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
+
 }
