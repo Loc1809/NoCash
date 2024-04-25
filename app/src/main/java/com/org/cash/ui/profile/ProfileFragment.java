@@ -18,6 +18,7 @@ import com.org.cash.API.ApiService;
 import com.org.cash.R;
 
 import com.google.android.material.navigation.NavigationView;
+import com.org.cash.model.ChangePwd;
 import com.org.cash.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ProfileFragment extends Fragment {
 
-    String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbW1JPTEVfdXNlcl1dIiwidXNlcm5hbWUiOiJsb2N0ZXN0MyIsImV4cCI6MTcxNDAwNTEwMX0.iY6Ce7SN6tRcwstxc2DmKds9cQV70EvmkWNBIxAfabFHOVm_PUI1C3b4HWTG02TMxKT7HE3jEb6Cl24mU81d1Q";
+    String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbW1JPTEVfdXNlcl1dIiwidXNlcm5hbWUiOiJsb2N0ZXN0NSIsImV4cCI6MTcxNDkyODkyMX0.v2napx5v9rGKp0dWvkI7otmoXBEJEJgvm5X8ATuRarlraX-zmWPCN24K4gTF-i1vpg6ZHG5gvymEuAm4RiJNnQ";
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -41,10 +42,16 @@ public class ProfileFragment extends Fragment {
 
     private TextView name;
     private TextView mail;
+
     private EditText editText_Name;
     private EditText editText_Email;
     private EditText editText_Phone;
     private Button save;
+
+    private EditText editText_old_pwd;
+    private EditText editText_reType_pwd;
+    private EditText editText_new_pwd;
+    private Button save_pwd;
 
 //    private EditText editText_Name;
 //    private EditText editText_Email;
@@ -126,23 +133,68 @@ public class ProfileFragment extends Fragment {
                 call.get().enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                      //  User resource = response.body();
-                        try{
-                            if(response.code()==200)
-                            showToast("Update successful");
-                            else{
+                        //  User resource = response.body();
+                        try {
+                            if (response.code() == 200)
+                                showToast("Update successful");
+                            else {
                                 showToast("UPDATE NOT SUCCESSFUL");
                             }
-                        }
-                        catch (Exception e){
-                            showToast("Update not successful");
+                        } catch (Exception e) {
+                            showToast("UPDATE NOT SUCCESSFUL");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         //throw new RuntimeException(t);
-                        showToast("Update not successful");
+                        showToast("UPDATE NOT SUCCESSFUL");
+                        call.cancel();
+                    }
+                });
+            }
+        });
+
+
+        this.editText_new_pwd = view.findViewById(R.id.editTextTextPassword_New);
+        this.editText_old_pwd = view.findViewById(R.id.editTextTextPassword_Old);
+        this.editText_reType_pwd = view.findViewById(R.id.editTextTextPassword_ReType);
+        this.save_pwd = view.findViewById(R.id.button4);
+
+        save_pwd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ChangePwd pwd = new ChangePwd();
+                pwd.newPwd = String.valueOf(editText_new_pwd.getText());
+                pwd.oldPwd = String.valueOf(editText_old_pwd.getText());
+                pwd.reTypePwd = String.valueOf(editText_reType_pwd.getText());
+
+                AtomicReference<Call<User>> call = new AtomicReference<>(apiService.updatePwdData(pwd, token));
+                call.get().enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        //  User resource = response.body();
+                        Log.e("ProfileFragment", "Error: " + response.body());
+                        try {
+                            if (response.code() == 200) {
+
+                                showToast("Update successful");
+                                editText_reType_pwd.setText("");
+                                editText_new_pwd.setText("");
+                                editText_old_pwd.setText("");
+                                hidenAll(view);
+                                view.findViewById(R.id.profile_main_fragment).setVisibility(View.VISIBLE);
+                            } else {
+                                showToast("UPDATE NOT SUCCESSFUL");
+                            }
+                        } catch (Exception e) {
+                            showToast("UPDATE NOT SUCCESSFUL");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        //throw new RuntimeException(t);
+                        showToast("UPDATE NOT SUCCESSFUL");
                         call.cancel();
                     }
                 });

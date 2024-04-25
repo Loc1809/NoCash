@@ -1,11 +1,16 @@
 package com.org.cash.API;
 
 
+import com.org.cash.model.ChangePwd;
 import com.org.cash.model.User;
 import retrofit2.Call;
 import retrofit2.http.*;
 
 public interface ApiService {
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @PUT("/user/update/pwd")
+    Call<User> updatePwdData(@Body ChangePwd pwd, @Header("Authorization") String auth);
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @PUT("/user/update")
     Call<User> updateData(@Body User user , @Header("Authorization") String auth);
