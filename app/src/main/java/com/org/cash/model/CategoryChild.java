@@ -14,7 +14,8 @@ import androidx.room.Index;
             @ForeignKey(entity = Category.class,
                         parentColumns = "id",
                         childColumns = "childId",
-                        onDelete = ForeignKey.CASCADE)},
+                        onDelete = ForeignKey.CASCADE)
+        },
         indices = {@Index("childId")})
 public class CategoryChild {
     public int parentId;

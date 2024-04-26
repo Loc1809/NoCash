@@ -1,7 +1,6 @@
 package com.org.cash.DAO;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.*;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;

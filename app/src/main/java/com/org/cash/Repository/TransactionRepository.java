@@ -60,7 +60,7 @@ public class TransactionRepository {
     }
 
     public LiveData<List<Transaction>> getAllTransactions() {
-        Transaction newTransaction = new Transaction(60000.0, 1237102123L, "aabbcc", "cate1", 1);
+        Transaction newTransaction = new Transaction(60000.0, "1237102123L", "aabbcc", "cate1", 1);
         insertTransaction(newTransaction);
 
         // Observe the insertion operation completion using LiveData

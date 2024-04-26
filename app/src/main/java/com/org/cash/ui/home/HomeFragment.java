@@ -1,9 +1,11 @@
 package com.org.cash.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentHomeBinding;
 import com.org.cash.model.Transaction;
 import com.org.cash.model.Wallet;
+import com.org.cash.ui.add_record.AddRecordFragment;
+import com.org.cash.ui.add_record.AddTransactionFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,14 +133,24 @@ import java.util.List;
             MoneyDb.databaseWriteExecutor.execute(() -> {
                 transactionsList = (ArrayList<Transaction>) db.transactionDao().getTransactions();
 //                DUMMY Transaction
-                Transaction newTransaction = new Transaction(60000.0, 1237102123L, "aabbcc", "cate1", 1);
+                Transaction newTransaction = new Transaction(60000.0, "1237102123L", "aabbcc", "cate1", 1);
                 transactionsList.add(newTransaction);
                 //
                 hnHandler.post(() -> {
                     transAdapter = new TransactionAdapter(context, transactionsList, new TransactionAdapter.ClickListenner() {
                         @Override
                         public void onItemClick(int position) {
+                            Transaction current = transactionsList.get(position);
                             Toast.makeText(context, transactionsList.get(position).getDesc(), Toast.LENGTH_SHORT).show();
+                            AddRecordFragment fragment = new AddRecordFragment();
+                            Bundle args = new Bundle();
+                            args.putDouble("amount", current.getAmount());
+                            args.putString("category", current.getCategory());
+                            args.putString("date", current.getTime());
+                            args.putString("wallet", current.getWallet());
+                            args.putString("note", current.getDesc());
+                            fragment.setArguments(args);
+                            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, fragment).commit();
                         }
                         @Override
                         public void onItemLongClick(int position) {

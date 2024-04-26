@@ -19,7 +19,7 @@ public class Transaction {
     private Double amount;
 
     @ColumnInfo(name = "time")
-    private Long time;
+    private String time;
 
     @ColumnInfo(name = "desc")
     private String desc;
@@ -39,7 +39,7 @@ public class Transaction {
     @ColumnInfo(name = "active")
     private Boolean active;
 
-    public Transaction(Double amount, Long time, String desc, String category, int direction) {
+    public Transaction(Double amount, String time, String desc, String category, int direction) {
         this.amount = amount;
         this.time = time;
         this.desc = desc;
@@ -76,11 +76,11 @@ public class Transaction {
         return convertEpochToDateString(this.time);
     }
 
-    public Long getTime() {
+    public String getTime() {
         return this.time;
     }
 
-    public void setTime(Long time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -137,13 +137,13 @@ public class Transaction {
     }
 
 
-    public String convertEpochToDateString(Long epoch) {
+    public String convertEpochToDateString(String epoch) {
         if (epoch == null) {
             return null;
         }
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Date date = new Date(epoch);
             return sdf.format(date);
         } catch (Exception e) {
