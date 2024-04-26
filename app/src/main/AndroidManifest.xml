@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
+            android:usesCleartextTraffic="true"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:enableOnBackInvokedCallback="true"
@@ -16,12 +18,6 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.NoCash"
             tools:targetApi="31">
-        <activity
-                android:name=".AddTransactionActivity"
-                android:configChanges="orientation|keyboardHidden|screenSize"
-                android:exported="false"
-                android:label="@string/title_activity_add_transaction"
-                android:theme="@style/Theme.NoCash.Fullscreen"/>
         <activity
                 android:name="com.org.cash.MainActivity"
                 android:exported="true"

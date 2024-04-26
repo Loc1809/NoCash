@@ -1,46 +1,29 @@
 package com.org.cash.model;
 
+import com.google.gson.annotations.SerializedName;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "user")
 public class User {
-    @PrimaryKey
-    @ColumnInfo(name="id")
-    int id;
-
-    @ColumnInfo(name = "username")
-    String username;
-
-    @ColumnInfo(name = "password")
-    String password; // encoded password
-
-    @ColumnInfo(name = "phone_number")
-    String phoneNumber;
-
-    @ColumnInfo(name = "email")
-    String email;
-
-    @ColumnInfo(name = "name")
-    String name;
-
-    @ColumnInfo(name = "identify_code")
-    String identifyCode;
-
-    @ColumnInfo(name = "date_of_birth")
-    String dateOfBirth; // stored date as string
-
-    @ColumnInfo(name = "role")
-    String role;
-
-    @ColumnInfo(name = "money")
-    Double money;
-
-    @ColumnInfo(name = "enabled")
-    Boolean enabled;
+    @SerializedName("id")
+    private int id;
+    @SerializedName("username")
+    private String username;
+    @SerializedName("password")
+    private String password;
+    private String phoneNumber;
+    @SerializedName("email")
+    private String email;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("identify_code")
+    private String identifyCode;
+    @SerializedName("date_of_birth")
+    private String dateOfBirth;
+    @SerializedName("role")
+    private String role;
+    @SerializedName("money")
+    private Float money;
+    @SerializedName("enabled")
+    private Boolean enabled;
 
     public User(String username, String password) {
         this.username = username;
@@ -69,33 +52,13 @@ public class User {
         this.enabled = active;
     }
 
-//    public User parent(){return parent;}
 
-//    public String getParent(){
-//        try {
-//            return parent.getName();
-//        } catch (Exception e) {
-//            return "";
-//        }
-//    }
-//
-//    public int parentId() {
-//        try {
-//            return parent.getId();
-//        } catch (Exception e) {
-//            return 0;
-//        }
-//    }
 
-//    public void setParent(User parent) {
-//        this.parent = parent;
-//    }
-
-    public Double getMoney() {
+    public Float getMoney() {
         return money;
     }
 
-    public void setMoney(Double money) {
+    public void setMoney(Float money) {
         this.money = money;
     }
 
@@ -123,8 +86,8 @@ public class User {
         this.username = username;
     }
 
-    public String password(){
-        return this.password;
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
