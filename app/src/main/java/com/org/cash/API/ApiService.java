@@ -2,12 +2,25 @@ package com.org.cash.API;
 
 
 import com.org.cash.model.ChangePwd;
+import com.org.cash.model.Login;
+import com.org.cash.model.TokenResponse;
 import com.org.cash.model.User;
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
 public interface ApiService {
+//    @Headers("Content-Type: multipart/form-data")
+//    @POST("/login")
+//    Call<TokenResponse> login(@Body MultipartBody requestBody);
 
+    @FormUrlEncoded
+    @POST("/login")
+    Call<TokenResponse> login(
+            @Field("username") String username,
+            @Field("password") String password
+    );
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @PUT("/user/update/pwd")
     Call<User> updatePwdData(@Body ChangePwd pwd, @Header("Authorization") String auth);

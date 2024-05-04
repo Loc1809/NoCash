@@ -1,6 +1,8 @@
 package com.org.cash.ui.profile;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.org.cash.API.ApiService;
+import com.org.cash.API.TokenManager;
 import com.org.cash.R;
 
 import com.google.android.material.navigation.NavigationView;
@@ -30,8 +33,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ProfileFragment extends Fragment {
-
-    String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbW1JPTEVfdXNlcl1dIiwidXNlcm5hbWUiOiJsb2N0ZXN0NSIsImV4cCI6MTcxNDkyODkyMX0.v2napx5v9rGKp0dWvkI7otmoXBEJEJgvm5X8ATuRarlraX-zmWPCN24K4gTF-i1vpg6ZHG5gvymEuAm4RiJNnQ";
+    //SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+    // Lấy token từ SharedPreferences
+    //String token = sharedPreferences.getString("token", "");
+    //String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbW1JPTEVfdXNlcl1dIiwidXNlcm5hbWUiOiJsb2N0ZXN0NSIsImV4cCI6MTcxNDkyODkyMX0.v2napx5v9rGKp0dWvkI7otmoXBEJEJgvm5X8ATuRarlraX-zmWPCN24K4gTF-i1vpg6ZHG5gvymEuAm4RiJNnQ";
+    String token = TokenManager.getInstance().getToken();
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
