@@ -58,28 +58,4 @@ public class TransactionRepository {
 
         return insertionResult;
     }
-
-    public LiveData<List<Transaction>> getAllTransactions() {
-        Transaction newTransaction = new Transaction(60000.0, "1237102123L", "aabbcc", "cate1", 1);
-        insertTransaction(newTransaction);
-
-        // Observe the insertion operation completion using LiveData
-        MutableLiveData<Boolean> insertionComplete = new MutableLiveData<>();
-        insertionComplete.postValue(false);
-
-        // Observe the insertion completion
-        insertTransaction(newTransaction).observeForever(new Observer<Long>() {
-            @Override
-            public void onChanged(Long result) {
-                // If the insertion operation is completed
-                if (result != null && result > 0) {
-                    // Notify that insertion is complete
-                    insertionComplete.postValue(true);
-                }
-            }
-        });
-
-        // Return LiveData representing all transactions, but wait until insertion is complete
-        return Transformations.switchMap(insertionComplete, inserted -> transactionDao.getAll());
-    }
 }

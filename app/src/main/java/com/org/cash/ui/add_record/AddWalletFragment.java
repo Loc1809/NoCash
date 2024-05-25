@@ -13,16 +13,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import com.google.android.material.snackbar.Snackbar;
+import com.org.cash.CustomToast;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentAddTransactionBinding;
 import com.org.cash.databinding.FragmentAddWalletBinding;
 import com.org.cash.model.Wallet;
+import com.org.cash.utils.Common;
 
 public class AddWalletFragment extends Fragment {
     private FragmentAddWalletBinding binding;
     private MoneyDb db;
     private Handler hnHandler;
+    private int walletId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,11 +39,52 @@ public class AddWalletFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddWalletBinding.inflate(inflater, container, false);
+        try {
+            if (requireArguments().getString("name") != null) {
+                walletId = requireArguments().getInt("id");
+                binding.editTextAmount.setText(String.valueOf(requireArguments().getDouble("amount")));
+                binding.editTextName.setText(String.valueOf(requireArguments().getString("name")));
+
+                binding.walletCancelButton.setVisibility(View.VISIBLE);
+                binding.walletOptionButton.setText("Delete");
+
+                binding.walletCancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                        navController.navigate(R.id.navigation_home);
+                    }
+                });
+                binding.walletOptionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Snackbar mySnackbar = Snackbar.make(binding.parentLayout, "Are you sure delete this wallet?", Snackbar.LENGTH_SHORT);
+                        mySnackbar.setAction("Confirm", o -> {
+                            MoneyDb.databaseWriteExecutor.execute(() -> {
+                                db.walletDao().deleteById(requireArguments().getInt("id"));
+                            });
+                        });
+                        mySnackbar.show();
+                    }
+                });
+            }
+        }
+        catch (Exception e){
+            System.out.println("Add wallet");
+        }
+
+        binding.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Common.hideSoftKeyboard(requireContext(), binding.getRoot());
+            }
+        });
+
         View view = binding.getRoot();
         binding.addWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(requireContext(), "Created", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(requireContext(), "Created", Toast.LENGTH_SHORT).show();
                 onClickEvent();
             }
         });

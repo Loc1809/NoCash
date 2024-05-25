@@ -1,5 +1,6 @@
 package com.org.cash;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,9 +8,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.documentfile.provider.DocumentFile;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -25,9 +31,14 @@ import com.org.cash.DAO.WalletDao;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.ActivityMainBinding;
+import com.org.cash.model.Transaction;
 import com.org.cash.model.User;
 import com.org.cash.model.Wallet;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Random;
 import java.io.File;
 import java.util.List;
 
@@ -43,13 +54,56 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+                Random rand = new Random();
+        Context context = this;
+        MoneyDb db = MoneyDb.getDatabase(context);
+        MoneyDb.databaseWriteExecutor.execute(() -> {
+             List<Transaction> list  = db.transactionDao().getTransactions();
+             try {
+                 if (list.size() < 1) {
+                     for (int i = 0; i < 10; i++) {
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate1", "abc", rand.nextInt(1));
+                         MoneyDb.databaseWriteExecutor.execute(() -> {
+                             db.transactionDao().insert(newTransaction);
+                         });
+                     }
+                 }
+             }
+             catch (Exception e){
+                 for (int i = 0; i < 10; i++) {
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate1", "abc", rand.nextInt(1));
+                         MoneyDb.databaseWriteExecutor.execute(() -> {
+                             db.transactionDao().insert(newTransaction);
+                         });
+                     }
+             }
+        });
+        MoneyDb.databaseWriteExecutor.execute(() -> {
+             List<Wallet> list  = db.walletDao().getWallets();
+             try {
+                 if (list.size() < 3) {
+                     for (int i = 0; i < 10; i++) {
+                         Wallet newWallet = new Wallet( "Wallet", rand.nextInt(10)*10000.0);
+                         MoneyDb.databaseWriteExecutor.execute(() -> {
+                             db.walletDao().insert(newWallet);
+                         });
+                     }
+                 }
+             }
+             catch (Exception e){
+                 for (int i = 0; i < 10; i++) {
+                         Wallet newWallet = new Wallet( "Wallet", rand.nextInt(10)*10000.0);
+                         MoneyDb.databaseWriteExecutor.execute(() -> {
+                             db.walletDao().insert(newWallet);
+                         });
+                     }
+             }
+        });
         File dexOutputDir = getCodeCacheDir();
         dexOutputDir.setReadOnly();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_statistics, R.id.navigation_add_record, R.id.navigation_budget, R.id.navigation_profile, R.id.profile_navigation_contact,R.id.profile_navigation_setting,R.id.profile_navigation_my_account,R.id.profile_navigation_help_center)
                 .build();
@@ -57,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
         requestStoragePermission();
+
     }
 
     @Override
@@ -80,11 +135,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && resultCode == Activity.RESULT_OK && data != null) {
-            Uri treeUri = data.getData();
+
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri treeUri = data.getData();
+
+                // Persist access permissions
+                final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+
+                createFolderInDirectory(treeUri);
+            }
+        }
+    }
+
+    private void createFolderInDirectory(Uri treeUri) {
+        DocumentFile pickedDir = DocumentFile.fromTreeUri(this, treeUri);
+        if (pickedDir != null && pickedDir.canWrite()) {
+            DocumentFile newFolder = pickedDir.createDirectory("NewFolder");
+            if (newFolder != null) {
+                Toast.makeText(this, "Folder created successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to create folder", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Cannot write to the selected directory", Toast.LENGTH_SHORT).show();
         }
     }
 }

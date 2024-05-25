@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.org.cash.API.ApiService;
+import com.org.cash.CustomToast;
 import com.org.cash.R;
 
 import com.google.android.material.navigation.NavigationView;
@@ -311,7 +312,7 @@ public class ProfileFragment extends Fragment {
 
 
     private void showToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        CustomToast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 }

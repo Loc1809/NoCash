@@ -1,10 +1,7 @@
 package com.org.cash.DAO;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
+import androidx.room.*;
 import com.org.cash.model.Wallet;
 
 import java.util.Collection;
@@ -28,8 +25,7 @@ public interface WalletDao {
 //           "last_name LIKE :last LIMIT 1")
 //    Wallet findByName(String first, String last);
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    @Insert()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Wallet wallet);
 
     @Insert
@@ -37,4 +33,8 @@ public interface WalletDao {
 
     @Delete
     void delete(Wallet wallet);
+
+    default void deleteById(int walletId){
+        delete(findById(walletId));
+    };
 }
