@@ -17,9 +17,6 @@ public class Wallet {
     @ColumnInfo(name="amount")
     double amount;
 
-    @Ignore
-    private User user;
-
     public Wallet(int id, String name, double amount) {
         this.id = id;
         this.name = name;
@@ -30,7 +27,6 @@ public class Wallet {
     public Wallet(String name, double amount) {
         this.name = name;
         this.amount = amount;
-//        this.user = user;
     }
 
     public int getId() {
@@ -55,13 +51,5 @@ public class Wallet {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

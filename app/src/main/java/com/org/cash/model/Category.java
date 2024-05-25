@@ -21,25 +21,12 @@ public class Category {
     @ColumnInfo(name = "type")
     private int type;
 
-    @ColumnInfo(name = "parentId")
-    public int parentId;
-
-    @Ignore
-    public List<Category> child;
-
-    @Ignore
-    private int user;
-
-    @ColumnInfo(name = "active")
-    private Boolean active;
-
     @ColumnInfo(name = "icon")
-    private String icon;
+    private int icon;
 
-    public Category(String name, int type, String icon) {
+    public Category(String name, int type, int icon) {
         this.name = name;
         this.type = type;
-        this.active = true;
         this.icon = icon;
     }
 
@@ -67,35 +54,11 @@ public class Category {
         this.type = type;
     }
 
-    public List<Category> getChild() {
-        return child;
-    }
-
-    public void setChild(List<Category> child) {
-        this.child = child;
-    }
-
-    public int getUser() {
-        return user;
-    }
-
-    public void setUser(int user) {
-        this.user = user;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public String getIcon() {
+    public int getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(int icon) {
         this.icon = icon;
     }
 }

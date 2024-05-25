@@ -15,8 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(
-        entities = {Category.class, Wallet.class,
-                CategoryChild.class, Transaction.class},
+        entities = {Category.class, Wallet.class, Transaction.class},
         version = 1,
         exportSchema = false
 )

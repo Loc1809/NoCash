@@ -1,10 +1,7 @@
 package com.org.cash.DAO;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
+import androidx.room.*;
 import com.org.cash.model.Transaction;
 
 import java.util.Collection;
@@ -21,20 +18,21 @@ public interface TransactionDao {
     @Query("SELECT * FROM trans WHERE id IN (:transactionIds)")
     LiveData<List<Transaction>> loadAllByIds(Collection<Integer> transactionIds);
 
+    @Query("SELECT * FROM trans WHERE time BETWEEN (:start) AND (:end)")
+    List<Transaction> getTransactionsByMonth(long start, long end);
+
     @Query("SELECT * FROM trans WHERE id IN (:transactionIds)")
     Transaction findById(int transactionIds);
-
-//    @Query("SELECT * FROM transaction WHERE first_name LIKE :first AND " +
-//           "last_name LIKE :last LIMIT 1")
-//    Transaction findByName(String first, String last);
-
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    @Insert()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Transaction transaction);
 
-    @Insert
+    @Insert()
     void insertAll(Transaction... transactions);
 
-    @Delete
+    @Delete()
     void delete(Transaction transaction);
+
+    default void deleteById(int transactionId){
+        delete(findById(transactionId));
+    };
 }

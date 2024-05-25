@@ -41,6 +41,6 @@
     <string name="back_to_menu">Back to profile menu</string>
     <string name="back_to_setting">Back to setting</string>
     <string name="select_date">Select date</string>
-    <string name="back_to_register">Back to register</string>
-    <string name="back_to_instruct">Back to instruct</string>
+    <string name="placeholder_fake_input">_______________________________________________</string>
+    <string name="category_icon">Category icon</string>
 </resources>
