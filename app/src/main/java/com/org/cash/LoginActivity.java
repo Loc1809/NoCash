@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         this.mail = findViewById(R.id.editTextEmail_login);
         this.password = findViewById(R.id.editTextPassword_login);
         this.login = findViewById(R.id.login);
+        performLogin(null, null);
 
 
         login.setOnClickListener(view -> {
@@ -83,7 +84,8 @@ public class LoginActivity extends AppCompatActivity {
 
     // Helper method to perform login (simulated API call)
     private void performLogin(String email, String password) {
-         AtomicReference<Call<TokenResponse>> call = new AtomicReference<>(apiService.login(email,password));
+        navigateToMainActivity();
+        AtomicReference<Call<TokenResponse>> call = new AtomicReference<>(apiService.login(email,password));
         call.get().enqueue(new Callback<TokenResponse>() {
             @Override
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {

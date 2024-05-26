@@ -156,18 +156,29 @@
                                  android:layout_width="wrap_content"
                                  android:layout_height="match_parent"
                                  android:layout_margin="10dp"/>
-                         <LinearLayout
+                         <androidx.constraintlayout.widget.ConstraintLayout
                                  android:layout_width="wrap_content"
-                                 android:layout_height="match_parent" android:orientation="vertical">
+                                 android:layout_height="match_parent"
+                                 android:orientation="horizontal">
                              <EditText
+                                     app:layout_constraintStart_toStartOf="parent"
                                      android:layout_width="wrap_content"
                                      android:layout_height="wrap_content"
-                                     android:inputType="text"
+                                     android:clickable="false"
+                                     android:focusable="false"
                                      android:hint="Category"
                                      android:ems="13"
                                      android:id="@+id/editTextCategory"
-                                     android:autofillHints=""/>
-                         </LinearLayout>
+                                     android:autofillHints="" app:layout_constraintTop_toTopOf="parent"/>
+                             <ImageView
+                                     android:src="@drawable/baseline_keyboard_arrow_right_24_purple"
+                                     android:id="@+id/arrow_select_cate"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="wrap_content"
+                                     app:layout_constraintEnd_toEndOf="parent"
+                                     app:layout_constraintBottom_toBottomOf="parent"
+                                     app:layout_constraintTop_toTopOf="parent"/>
+                         </androidx.constraintlayout.widget.ConstraintLayout>
                      </LinearLayout>
                  </LinearLayout>
                  <LinearLayout
@@ -230,14 +241,29 @@
                                  android:orientation="vertical"
                                  android:layout_width="wrap_content"
                                  android:layout_height="match_parent">
+                         <androidx.constraintlayout.widget.ConstraintLayout
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="match_parent"
+                                 android:orientation="horizontal">
                              <EditText
+                                     app:layout_constraintStart_toStartOf="parent"
                                      android:layout_width="wrap_content"
                                      android:layout_height="wrap_content"
-                                     android:inputType="text"
+                                     android:clickable="false"
+                                     android:focusable="false"
                                      android:hint="Wallet"
                                      android:ems="13"
                                      android:id="@+id/editTextWallet"
-                                     android:autofillHints=""/>
+                                     android:autofillHints="" app:layout_constraintTop_toTopOf="parent"/>
+                             <ImageView
+                                     android:src="@drawable/baseline_keyboard_arrow_right_24_purple"
+                                     android:id="@+id/arrow_select_wallet"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="wrap_content"
+                                     app:layout_constraintEnd_toEndOf="parent"
+                                     app:layout_constraintBottom_toBottomOf="parent"
+                                     app:layout_constraintTop_toTopOf="parent"/>
+                         </androidx.constraintlayout.widget.ConstraintLayout>
                          </LinearLayout>
                      </LinearLayout>
                  </LinearLayout>

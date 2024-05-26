@@ -125,14 +125,12 @@ public class MainActivity extends AppCompatActivity {
     private void requestStoragePermission() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean permissionRequested = sharedPreferences.getBoolean(PREF_STORAGE_PERMISSION_REQUESTED, false);
+        sharedPreferences.edit().putBoolean(PREF_STORAGE_PERMISSION_REQUESTED, true).apply();
 
-        if (!permissionRequested) {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-            startActivityForResult(intent, REQUEST_CODE_STORAGE_PERMISSION);
-
-            // Update the flag to indicate that permission has been requested
-            sharedPreferences.edit().putBoolean(PREF_STORAGE_PERMISSION_REQUESTED, true).apply();
-        }
+//        if (!permissionRequested) {
+//            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+//            startActivityForResult(intent, REQUEST_CODE_STORAGE_PERMISSION);
+//        }
     }
 
     @SuppressLint("WrongConstant")
@@ -144,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 Uri treeUri = data.getData();
 
-                // Persist access permissions
                 final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
 
-                createFolderInDirectory(treeUri);
             }
         }
     }
@@ -156,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
     private void createFolderInDirectory(Uri treeUri) {
         DocumentFile pickedDir = DocumentFile.fromTreeUri(this, treeUri);
         if (pickedDir != null && pickedDir.canWrite()) {
+            pickedDir.findFile("NewFolder");
             DocumentFile newFolder = pickedDir.createDirectory("NewFolder");
             if (newFolder != null) {
                 Toast.makeText(this, "Folder created successfully", Toast.LENGTH_SHORT).show();
@@ -166,4 +163,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Cannot write to the selected directory", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Cancel any ongoing tasks or cleanup resources
+    }
+
 }

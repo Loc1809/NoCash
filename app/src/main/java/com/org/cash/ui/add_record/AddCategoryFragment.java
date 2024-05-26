@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.org.cash.R;
@@ -56,14 +54,18 @@ public class AddCategoryFragment extends Fragment {
         binding = FragmentAddCategoryBinding.inflate(inflater, container, false);
 
         selectDirection(0);
-//        gridLayout
+
         bottomSheetDialog = new BottomSheetDialog(requireContext());
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_layout);
+        View sheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
+        bottomSheetDialog.setContentView(sheetView);
+
+        gridLayout = new GridLayout(requireContext());
+        gridLayout = sheetView.findViewById(R.id.iconGrid);
+
         bottomSheetDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                binding.arrowSelect.setImageResource(R.drawable.baseline_keyboard_arrow_right_24_purple);
-                clearBottomSheet();
+                binding.arrowSelectCate.setImageResource(R.drawable.baseline_keyboard_arrow_right_24_purple);
             }
         });
 
@@ -72,7 +74,7 @@ public class AddCategoryFragment extends Fragment {
             public void onClick(View view) {
                 addIconsToContainer();
                 Common.hideSoftKeyboard(requireContext(), binding.getRoot());
-                binding.arrowSelect.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+                binding.arrowSelectCate.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
                 showBottomSheet();
             }
         });
@@ -82,7 +84,7 @@ public class AddCategoryFragment extends Fragment {
             public void onClick(View view) {
                 addIconsToContainer();
                 Common.hideSoftKeyboard(requireContext(), binding.getRoot());
-                binding.arrowSelect.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+                binding.arrowSelectCate.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
                 showBottomSheet();
             }
         });
@@ -90,7 +92,8 @@ public class AddCategoryFragment extends Fragment {
         binding.viewAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItemsToBottomSheet(requireContext());
+                addCateToBottomSheet(requireContext());
+                showBottomSheet();
             }
         });
 
@@ -98,6 +101,7 @@ public class AddCategoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 onSave();
+                clearInfo();
             }
         });
 
@@ -126,6 +130,7 @@ public class AddCategoryFragment extends Fragment {
 
     private void addIconsToContainer() {
         if (gridLayout != null) {
+            clearBottomSheet();
             int[] iconIds = {R.drawable.baseline_calendar_month_24, R.drawable.baseline_wallet_24, R.drawable.baseline_attach_money_24, R.drawable.baseline_edit_note_24,
             R.drawable.baseline_calendar_month_24, R.drawable.baseline_wallet_24, R.drawable.baseline_attach_money_24, R.drawable.baseline_edit_note_24,
             R.drawable.baseline_calendar_month_24, R.drawable.baseline_wallet_24, R.drawable.baseline_attach_money_24, R.drawable.baseline_edit_note_24};
@@ -146,14 +151,15 @@ public class AddCategoryFragment extends Fragment {
                 imageView.setLayoutParams(layoutParams);
                 imageView.setAdjustViewBounds(true);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                final int currentIcon = i;
+                final int iconIndex = i;
                 imageView.setOnClickListener(view -> {
+                    currentIcon = iconIds[iconIndex];
                     if (selectedIcon != null) {
                         selectedIcon.setAlpha(1.0f);
                     }
                     imageView.setAlpha(0.5f);
                     selectedIcon = imageView;
-                    setIconResource(iconIds[currentIcon]);
+                    setIconResource(currentIcon);
                     binding.placeholderIconSelect.setHint("");
                 });
 
@@ -162,33 +168,52 @@ public class AddCategoryFragment extends Fragment {
         }
     }
 
-    private void addItemsToBottomSheet(Context context) {
+    private void addCateToBottomSheet(Context context) {
         if (gridLayout != null) {
+            clearBottomSheet();
             db = MoneyDb.getDatabase(context);
+
             List<Category> itemList = db.categoryDao().findAllByType(direction);
+            if (itemList.isEmpty())
+                hideBottomSheet();
+            int columnCount = 3;
+            int rowCount = (itemList.size() + columnCount - 1) / columnCount;
+            gridLayout.setRowCount(rowCount);
+            int cRow = 0;
+            int cCol = 0;
+            for (Category item : itemList) {
+                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+                layoutParams.rowSpec = GridLayout.spec(cRow, 1, 1f);
+                layoutParams.columnSpec = GridLayout.spec(cCol, 1, 1f);
+                View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.cate_record, gridLayout, false);
+                itemView.setLayoutParams(layoutParams);
 
-            if (gridLayout != null) {
-                gridLayout.removeAllViews();
+                ImageView iconImageView = itemView.findViewById(R.id.iconImageView);
+                TextView nameTextView = itemView.findViewById(R.id.nameTextView);
+                iconImageView.setImageResource(item.getIcon());
+                nameTextView.setText(item.getName());
 
-                for (Category item : itemList) {
-                    View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.cate_record, gridLayout, false);
+                itemView.setOnLongClickListener(view -> {
+                    hideBottomSheet();
+                    displayEditInfo(item.getId(), item.getName(), item.getIcon(), item.getType());
+                    return true;
+                });
 
-                    ImageView iconImageView = itemView.findViewById(R.id.iconImageView);
-                    TextView nameTextView = itemView.findViewById(R.id.nameTextView);
-
-                    iconImageView.setImageResource(item.getIcon());
-                    nameTextView.setText(item.getName());
-
-                    itemView.setOnLongClickListener(view -> {
-                        hideBottomSheet();
-//                        displayEditInfo();
-                        return true;
-                    });
-
-                    gridLayout.addView(itemView);
-                }
+                int[] newVal = plus(cCol, cRow, columnCount);
+                cRow = newVal[1];
+                cCol = newVal[0];
+                gridLayout.addView(itemView);
             }
         }
+    }
+
+    private int[] plus(int c_col, int c_row, int max_item){
+        if (c_col + 1 == max_item ){
+            c_col = 0;
+            c_row += 1;
+        } else
+            c_col += 1;
+        return new int[]{c_col, c_row};
     }
 
     public boolean onSave(){
@@ -196,22 +221,22 @@ public class AddCategoryFragment extends Fragment {
         if (!validateInput())
             return false;
         String name = String.valueOf(binding.editTextName.getText());
+        int currentId = cateId;
+        db = MoneyDb.getDatabase(context);
+        hnHandler = new Handler(Looper.getMainLooper());
+        MoneyDb.databaseWriteExecutor.execute(() -> {
+            Category category = new Category(name, direction, currentIcon);
 
-            db = MoneyDb.getDatabase(context);
-            hnHandler = new Handler(Looper.getMainLooper());
-            MoneyDb.databaseWriteExecutor.execute(() -> {
-                Category category = new Category(name, direction, currentIcon);
+            if (currentId != -1)
+                category.setId(currentId);
 
-                if (cateId != -1)
-                    category.setId(cateId);
-
-                long newid = db.categoryDao().insert(category);
-                    hnHandler.post(() -> {
-                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
-                        binding.editTextName.setText("");
-                        binding.placeholderIconSelect.setHint(R.string.category_icon);
-                });
+            long newid = db.categoryDao().insert(category);
+            hnHandler.post(() -> {
+                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                binding.editTextName.setText("");
+                binding.placeholderIconSelect.setHint(R.string.category_icon);
             });
+        });
         return true;
     }
 

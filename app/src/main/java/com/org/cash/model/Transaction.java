@@ -31,7 +31,7 @@ public class Transaction {
     private int direction; // 0 for income, 1 for outcome
 
     @ColumnInfo(name = "category")
-    private String category; // Foreign key referencing Category table
+    private String category;
 
     @Ignore
     private User user;
