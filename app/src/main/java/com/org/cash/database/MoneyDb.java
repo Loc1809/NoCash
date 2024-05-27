@@ -37,7 +37,9 @@ public abstract class MoneyDb extends RoomDatabase {
             synchronized (MoneyDb.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            MoneyDb.class, "money_database").allowMainThreadQueries()
+                            MoneyDb.class, "money_database")
+                            .fallbackToDestructiveMigration()
+                            .allowMainThreadQueries()
                             .build();
                 }
             }

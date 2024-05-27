@@ -27,6 +27,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import com.org.cash.API.TokenManager;
 import com.org.cash.DAO.WalletDao;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 1) {
                      for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate1", "abc", rand.nextInt(1));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate2", "abc", rand.nextInt(1));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate1", "abc", rand.nextInt(1));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate2", "abc", rand.nextInt(1));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -105,11 +106,42 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_statistics, R.id.navigation_add_record, R.id.navigation_budget, R.id.navigation_profile, R.id.profile_navigation_contact,R.id.profile_navigation_setting,R.id.profile_navigation_my_account,R.id.profile_navigation_help_center)
+                R.id.navigation_home, R.id.navigation_statistics, R.id.navigation_add_record, R.id.navigation_budget, R.id.navigation_profile)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        navView.setOnNavigationItemSelectedListener(item -> {
+            if(item.getItemId() == R.id.navigation_home){
+                navController.navigate(R.id.navigation_home);
+            }
+            else if(item.getItemId() == R.id.navigation_statistics){
+                navController.navigate(R.id.navigation_statistics);
+            }
+            else if(item.getItemId() == R.id.navigation_add_record){
+                navController.navigate(R.id.navigation_add_record);
+            }
+            else if(item.getItemId() == R.id.navigation_budget){
+                navController.navigate(R.id.navigation_budget);
+            }
+            else if(item.getItemId() == R.id.navigation_home){
+                navController.navigate(R.id.navigation_home);
+            }
+            else if(item.getItemId() == R.id.navigation_profile) {
+                if (TokenManager.getInstance().getToken()!=null) {
+                    navController.navigate(R.id.navigation_profile);
+                } else {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+                return false;
+            } else {
+                return NavigationUI.onNavDestinationSelected(item, navController)
+                        || super.onOptionsItemSelected(item);
+            }
+            return false;
+        });
+
         requestStoragePermission();
 
     }
