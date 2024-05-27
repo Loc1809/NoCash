@@ -33,6 +33,7 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
          <androidx.cardview.widget.CardView
+                 android:id="@+id/cardview"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:layout_margin="8dp"
@@ -183,8 +184,7 @@
                  </LinearLayout>
                  <LinearLayout
                          android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:background="@color/white">
+                         android:layout_height="wrap_content">
                      <LinearLayout
                              android:orientation="horizontal"
                              android:layout_width="match_parent"
@@ -197,34 +197,46 @@
                                  android:layout_width="wrap_content"
                                  android:layout_height="match_parent"
                                  android:layout_margin="10dp"/>
-                         <LinearLayout
-                                 android:orientation="vertical"
+                         <androidx.constraintlayout.widget.ConstraintLayout
+                                 android:orientation="horizontal"
                                  android:layout_width="wrap_content"
                                  android:layout_height="match_parent">
-                             <EditText
-                                     android:layout_width="wrap_content"
-                                     android:layout_height="wrap_content"
-                                     android:inputType="datetime"
-                                     android:hint="@string/select_date"
-                                     android:ems="12"
-                                     android:id="@+id/editTextCal"
-                                     android:autofillHints=""
-                                     android:editable="false"
-                                     android:clickable="false"/>
-                         </LinearLayout>
-
-                         <ImageView
-                                 android:src="@drawable/baseline_calendar_today_24"
+                             <LinearLayout
+                                 android:id="@+id/select_date"
+                                 app:layout_constraintTop_toTopOf="parent"
+                                 app:layout_constraintStart_toStartOf="parent"
                                  android:layout_width="wrap_content"
-                                 android:layout_height="match_parent"
-                                 android:id="@+id/btn_select_calendar"
-                         />
+                                 android:layout_height="wrap_content">
+                                 <EditText
+                                         android:layout_width="wrap_content"
+                                         android:layout_height="wrap_content"
+                                         android:inputType="datetime"
+                                         android:hint="@string/select_date"
+                                         android:ems="13"
+                                         android:id="@+id/editTextCal"
+                                         android:autofillHints=""
+                                         android:focusable="false"
+                                         android:clickable="false"/>
+                             </LinearLayout>
+                             <ImageView
+                                     android:layout_marginBottom="5dp"
+                                     app:layout_constraintTop_toTopOf="parent"
+                                     app:layout_constraintEnd_toEndOf="parent"
+                                     app:layout_constraintBottom_toBottomOf="parent"
+                                     android:src="@drawable/baseline_calendar_today_24"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="match_parent"
+                                     android:id="@+id/btn_select_calendar"
+                             />
+                         </androidx.constraintlayout.widget.ConstraintLayout>
+
                      </LinearLayout>
                  </LinearLayout>
                  <LinearLayout
+                         android:id="@+id/wallet_block"
                          android:layout_width="match_parent"
                          android:layout_height="wrap_content"
-                         android:background="@color/white">
+                         android:background="@drawable/background_state">
                      <LinearLayout
                              android:orientation="horizontal"
                              android:layout_width="match_parent"
@@ -268,9 +280,10 @@
                      </LinearLayout>
                  </LinearLayout>
                  <LinearLayout
+                         android:id="@+id/note_block"
                          android:layout_width="match_parent"
                          android:layout_height="wrap_content"
-                         android:background="@color/white">
+                         android:background="@drawable/background_state">
                      <LinearLayout
                              android:orientation="horizontal"
                              android:layout_width="match_parent"
@@ -287,7 +300,7 @@
                          <LinearLayout
                                  android:orientation="vertical"
                                  android:layout_width="wrap_content"
-                                 android:layout_height="match_parent">
+                                 android:layout_height="wrap_content">
                              <EditText
                                      android:layout_width="wrap_content"
                                      android:layout_height="wrap_content"
@@ -301,7 +314,14 @@
                  </LinearLayout>
              </LinearLayout>
          </androidx.cardview.widget.CardView>
-
+         <Button
+                android:id="@+id/change_mode_button"
+                android:text="Create Limit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_700"
+                android:layout_margin="10dp"
+                app:layout_constraintTop_toBottomOf="@id/cardview"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -1,14 +1,11 @@
 package com.org.cash.ui.add_record;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +13,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.room.RoomSQLiteQuery;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.org.cash.CustomToast;
@@ -27,31 +22,29 @@ import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentAddTransactionBinding;
 import com.org.cash.model.Category;
+import com.org.cash.model.Limit;
 import com.org.cash.model.Transaction;
 import com.org.cash.model.Wallet;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import com.org.cash.utils.Common;
+import com.org.cash.utils.MonthYearPickerDialog;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddTransactionFragment} factory method to
  * create an instance of this fragment.
  */
-public class AddTransactionFragment extends Fragment {
+public class AddTransactionFragment extends Fragment  {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FragmentAddTransactionBinding binding;
     private MoneyDb db;
     private Handler hnHandler;
     private Button button;
-    private int mYear, mMonth, mDay, datetime, transId = 0, direction;
+    private int mYear, mMonth, mDay, datetime, transId = 0, limitId = 0, direction;
     private GridLayout gridLayout;
     private BottomSheetDialog bottomSheetDialog;
+    private String mode="limit";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,13 +65,16 @@ public class AddTransactionFragment extends Fragment {
 
         try {
             if (requireArguments().getString("category") != null) {
-                transId = requireArguments().getInt("id");
-                binding.editTextAmount.setText(String.valueOf(requireArguments().getDouble("amount")));
-                binding.editTextCategory.setText(String.valueOf(requireArguments().getString("category")));
-                binding.editTextCal.setText(String.valueOf(requireArguments().getString("date")));
-                binding.editTextWallet.setText(String.valueOf(requireArguments().getString("wallet")));
-                binding.editTextNote.setText(String.valueOf(requireArguments().getString("note")));
+//                if (requireArguments().getString("mode").equals("trans")){
 
+                    transId = requireArguments().getInt("id");
+                    binding.editTextAmount.setText(String.valueOf(requireArguments().getDouble("amount")));
+                    binding.editTextCategory.setText(String.valueOf(requireArguments().getString("category")));
+                    binding.editTextCal.setText(String.valueOf(requireArguments().getString("date")));
+                    binding.editTextWallet.setText(String.valueOf(requireArguments().getString("wallet")));
+                    binding.editTextNote.setText(String.valueOf(requireArguments().getString("note")));
+
+//                }
                 binding.cancelButton.setVisibility(View.VISIBLE);
                 binding.optionButton.setText("Delete");
                 selectDirection(requireArguments().getInt("direction"));
@@ -133,7 +129,7 @@ public class AddTransactionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 CustomToast.makeText(requireContext(), "Created", Toast.LENGTH_SHORT, 1).show();
-                onClickEvent();
+                onSave();
             }
         });
 
@@ -148,24 +144,10 @@ public class AddTransactionFragment extends Fragment {
                 binding.editTextNote.setText("");
             }
         });
-        binding.btnSelectCalendar.setOnClickListener(new View.OnClickListener() {
+        binding.editTextCal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 // Get Current Date
-                final Calendar c = Calendar.getInstance();
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                String text = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                                binding.editTextCal.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.show();
+                showDatePickerDialog();
             }
         });
 
@@ -181,9 +163,14 @@ public class AddTransactionFragment extends Fragment {
         binding.editTextWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.arrowSelectCate.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
-                addWalletToBottomSheet(requireContext());
-                showBottomSheet();
+                selectWallet();
+            }
+        });
+
+        binding.changeModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeModeTo(mode);
             }
         });
 
@@ -196,6 +183,79 @@ public class AddTransactionFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void selectWallet(){
+        binding.arrowSelectCate.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        addWalletToBottomSheet(requireContext());
+        showBottomSheet();
+    }
+
+    private void changeModeTo(String change_mode){
+        binding.editTextCal.setText("");
+        if (change_mode.equals("trans")){
+            mode = "limit";
+            binding.changeModeButton.setText("Create Limit");
+            binding.noteBlock.setEnabled(true);
+            binding.walletBlock.setEnabled(true);
+            binding.editTextWallet.setEnabled(true);
+            binding.editTextNote.setEnabled(true);
+            binding.editTextCal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Common.hideSoftKeyboard(requireContext(), binding.getRoot());
+                    showDatePickerDialog();
+            }
+        });
+        } else {
+            mode = "trans";
+            binding.changeModeButton.setText("Create Transaction");
+            binding.noteBlock.setEnabled(false);
+            binding.walletBlock.setEnabled(false);
+            binding.editTextWallet.setEnabled(false);
+            binding.editTextNote.setEnabled(false);
+
+            binding.editTextCal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Get Current Date
+                    Common.hideSoftKeyboard(requireContext(), binding.getRoot());
+                    showMonthPicker();
+                }
+            });
+        }
+    }
+
+    private void showDatePickerDialog(){
+        final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            String text = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                            binding.editTextCal.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        }
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.show();
+    }
+
+    private void showMonthPicker() {
+        showMonthYearPicker();
+    }
+
+    private void showMonthYearPicker() {
+        MonthYearPickerDialog dialog = MonthYearPickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    String selectedDate = (month + 1) + "/" + year;
+                    binding.editTextCal.setText(selectedDate);
+                }
+            });
+            dialog.show(getFragmentManager(), "MonthYearPickerDialog");
     }
 
     private void addWalletToBottomSheet(Context context) {
@@ -285,18 +345,19 @@ public class AddTransactionFragment extends Fragment {
         binding = null;
     }
 
-    public boolean onClickEvent() {
+    public boolean onSave() {
         Context context = requireContext();
         if (!validateInput())
             return false;
         Double amount = Double.valueOf(String.valueOf(binding.editTextAmount.getText()));
         String category = binding.editTextCategory.getText().toString();
-        Long datetime = Common.getTimeFromString(String.valueOf(binding.editTextCal.getText()));
         String wallet = String.valueOf(binding.editTextWallet.getText());
         String note = String.valueOf(binding.editTextNote.getText());
-
-            db = MoneyDb.getDatabase(context);
-            hnHandler = new Handler(Looper.getMainLooper());
+        db = MoneyDb.getDatabase(context);
+        hnHandler = new Handler(Looper.getMainLooper());
+        if (mode.equals("limit")){
+//           LOC NOTE: TRANSACTION
+            Long datetime = Common.getTimeFromString(String.valueOf(binding.editTextCal.getText()));
             MoneyDb.databaseWriteExecutor.execute(() -> {
                 Transaction transaction = new Transaction(amount, datetime, note, category, wallet, direction);
                 if (transId != 0)
@@ -311,8 +372,35 @@ public class AddTransactionFragment extends Fragment {
                         binding.editTextNote.setText("");
                 });
             });
-//        }
+        } else {
+//           LOC NOTE: LIMIT
+            String datetimeString = binding.editTextCal.getText().toString();
+            String[] monthYear = datetimeString.split("/");
+            Long[] timestamps = Common.getStartEndOfMonth(Integer.parseInt(monthYear[0]), Integer.parseInt(monthYear[1]));
+            MoneyDb.databaseWriteExecutor.execute(() -> {
+                Limit limit = new Limit(amount, category, timestamps[0].toString(), timestamps[1].toString(), direction);
+                if (limitId != 0)
+                    limit.setId(limitId);
+
+                long newid = db.limitDao().insert(limit);
+                    hnHandler.post(() -> {
+                        binding.editTextAmount.setText("");
+                        binding.editTextCategory.setText("");
+                        binding.editTextWallet.setText("");
+                        binding.editTextCal.setText("");
+                        binding.editTextNote.setText("");
+                });
+            });
+        }
         return true;
+    }
+
+    public void clearInputs(){
+        binding.editTextAmount.setText("");
+        binding.editTextCategory.setText("");
+        binding.editTextWallet.setText("");
+        binding.editTextCal.setText("");
+        binding.editTextNote.setText("");
     }
 
     public void selectDirection(int id){
@@ -345,7 +433,7 @@ public class AddTransactionFragment extends Fragment {
             binding.editTextCal.setError("Missing this field");
             return false;
         }
-        if (binding.editTextWallet.getText().length() == 0 || binding.editTextWallet.getText().toString().equals("0")) {
+        if (mode.equals("limit") && (binding.editTextWallet.getText().length() == 0 || binding.editTextWallet.getText().toString().equals("0"))) {
             binding.editTextWallet.setError("Missing this field");
             return false;
         }

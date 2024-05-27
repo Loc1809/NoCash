@@ -26,6 +26,7 @@ import com.org.cash.model.Transaction;
 import com.org.cash.model.Wallet;
 import com.org.cash.ui.add_record.AddTransactionFragment;
 import com.org.cash.ui.add_record.AddWalletFragment;
+import com.org.cash.utils.Common;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -60,7 +61,7 @@ import java.util.List;
                              Bundle savedInstanceState) {
         // Inflate the layout using data binding
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
+        binding.homeHeader.setVisibility(View.GONE);
         // Access views through the binding object
         uName = binding.getRoot().findViewById(R.id.home_username);
         monthTitle = binding.getRoot().findViewById(R.id.month_text);
@@ -232,25 +233,8 @@ import java.util.List;
         }
     }
 
-    public Long[] getStartEndOfMonth(int month, int year) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, month+1);
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        long startOfMonth = calendar.getTimeInMillis();
-        calendar.add(Calendar.MONTH, 1);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        long endOfMonth = calendar.getTimeInMillis();
-        return new Long[] {startOfMonth, endOfMonth};
-    }
-
     public void getAndShowTransaction(Context context, View rootView, int month, int year) {
-        Long[] timestamp = getStartEndOfMonth(month, year);
+        Long[] timestamp = Common.getStartEndOfMonth(month, year);
         MoneyDb.databaseWriteExecutor.execute(() -> {
             transactionsList = (ArrayList<Transaction>) db.transactionDao().getTransactionsByMonth(timestamp[0], timestamp[1]);
             hnHandler.post(() -> {

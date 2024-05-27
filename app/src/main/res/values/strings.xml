@@ -45,4 +45,6 @@
     <string name="category_icon">Category icon</string>
     <string name="back_to_register">Back to register</string>
     <string name="back_to_instruct">Back to instruct</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>
