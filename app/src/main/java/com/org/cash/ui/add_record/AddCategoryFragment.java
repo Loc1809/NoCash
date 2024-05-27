@@ -220,23 +220,29 @@ public class AddCategoryFragment extends Fragment {
         Context context = requireContext();
         if (!validateInput())
             return false;
+
         String name = String.valueOf(binding.editTextName.getText());
         int currentId = cateId;
         db = MoneyDb.getDatabase(context);
         hnHandler = new Handler(Looper.getMainLooper());
+
         MoneyDb.databaseWriteExecutor.execute(() -> {
             Category category = new Category(name, direction, currentIcon);
-
-            if (currentId != -1)
+            if (currentId != -1) {
                 category.setId(currentId);
+            }
 
-            long newid = db.categoryDao().insert(category);
+            db.categoryDao().checkBeforeInsert(category, context, hnHandler);
+
             hnHandler.post(() -> {
-                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
-                binding.editTextName.setText("");
-                binding.placeholderIconSelect.setHint(R.string.category_icon);
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                    binding.editTextName.setText("");
+                    binding.placeholderIconSelect.setHint(R.string.category_icon);
+                }
             });
         });
+
         return true;
     }
 

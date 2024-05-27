@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 1) {
                      for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate2", "abc", rand.nextInt(1));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate"+rand.nextInt(20), "abc", rand.nextInt(1));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate2", "abc", rand.nextInt(1));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate"+rand.nextInt(20), "abc", rand.nextInt(1));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 3) {
                      for (int i = 0; i < 10; i++) {
-                         Wallet newWallet = new Wallet( "Wallet", rand.nextInt(10)*10000.0);
+                         Wallet newWallet = new Wallet( "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.walletDao().insert(newWallet);
                          });
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                         Wallet newWallet = new Wallet( "Wallet", rand.nextInt(10)*10000.0);
+                         Wallet newWallet = new Wallet( "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.walletDao().insert(newWallet);
                          });

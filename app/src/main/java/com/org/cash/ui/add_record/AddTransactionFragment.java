@@ -382,13 +382,15 @@ public class AddTransactionFragment extends Fragment  {
                 if (limitId != 0)
                     limit.setId(limitId);
 
-                long newid = db.limitDao().insert(limit);
-                    hnHandler.post(() -> {
+                db.limitDao().checkBeforeInsert(limit, context, hnHandler);
+                hnHandler.post(() -> {
+                    if (isAdded()){
                         binding.editTextAmount.setText("");
                         binding.editTextCategory.setText("");
                         binding.editTextWallet.setText("");
                         binding.editTextCal.setText("");
                         binding.editTextNote.setText("");
+                    }
                 });
             });
         }

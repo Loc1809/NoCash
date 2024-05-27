@@ -13,7 +13,7 @@ import java.util.List;
 public class Category {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int id;
+    private int id = -1;
 
     @ColumnInfo(name = "name")
     private String name;

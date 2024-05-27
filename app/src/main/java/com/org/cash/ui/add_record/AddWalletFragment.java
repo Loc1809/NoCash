@@ -84,7 +84,6 @@ public class AddWalletFragment extends Fragment {
         binding.addWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomToast.makeText(requireContext(), "Created", Toast.LENGTH_SHORT).show();
                 onClickEvent();
             }
         });
@@ -99,20 +98,35 @@ public class AddWalletFragment extends Fragment {
 
     public boolean onClickEvent() {
         Context context = requireContext();
-        String name = binding.editTextName.getText().toString();
-        Integer amount = Integer.parseInt(String.valueOf(binding.editTextAmount.getText()));
-        if ((amount != null && !amount.equals("")) || (name != null && !name.equals(""))) {
+        if (validateInput()) {
+            String name = binding.editTextName.getText().toString();
+            Integer amount = Integer.parseInt(String.valueOf(binding.editTextAmount.getText()));
             db = MoneyDb.getDatabase(context);
             hnHandler = new Handler(Looper.getMainLooper());
             MoneyDb.databaseWriteExecutor.execute(() -> {
                 Wallet wallet = new Wallet(name, amount);
-                long newid = db.walletDao().insert(wallet);
-                    hnHandler.post(() -> {
+                db.walletDao().checkBeforeInsert(wallet, requireContext(), hnHandler);
+                hnHandler.post(() -> {
+                    if (isAdded()) {
                         binding.editTextName.setText("");
                         binding.editTextAmount.setText("");
+                    }
                 });
             });
         }
         return true;
     }
+
+    public boolean validateInput() {
+        if (binding.editTextName.getText().length() == 0) {
+            binding.editTextName.setError("Missing this field");
+            return false;
+        }
+        if (binding.editTextAmount.getText().length() == 0) {
+            binding.editTextAmount.setError("Missing this field");
+            return false;
+        }
+        return true;
+    }
+
 }

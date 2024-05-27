@@ -1,11 +1,16 @@
 package com.org.cash.DAO;
 
+import android.content.Context;
+import android.os.Handler;
+import android.widget.Toast;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import com.org.cash.CustomToast;
 import com.org.cash.model.Category;
+import com.org.cash.model.Limit;
 
 import java.util.List;
 
@@ -30,11 +35,12 @@ public interface CategoryDao {
     @Query("SELECT * FROM category WHERE type = :type")
     List<Category> findAllByType(int type);
 
+    @Query("SELECT * FROM category WHERE type = :type AND name = :name")
+    List<Category> findAllByTypeAndName(int type, String name);
+
     @Query("SELECT * FROM category WHERE type = :type")
     List<Category> getCategoriesIsInAndType(int type);
 
-//    @Query("SELECT * FROM category WHERE id NOT IN (SELECT childId FROM categorychild) AND active = 1 AND type = :type")
-//    List<Category> findParentCategories(int type);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Category category);
@@ -48,4 +54,15 @@ public interface CategoryDao {
     default void deleteById(int id){
         delete(findById(id));
     };
+
+    default void checkBeforeInsert(Category category, Context context, Handler handler){
+        List<Category> list = findAllByTypeAndName(category.getType(), category.getName());
+        if (list.isEmpty() || category.getId() != -1){
+            insert(category);
+        } else {
+            handler.post(() -> {
+                CustomToast.makeText(context, "Category existed", Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
 }

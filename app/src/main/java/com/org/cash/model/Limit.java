@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class Limit {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
-    int id;
+    int id = -1;
 
     @ColumnInfo(name="amount")
     double amount;
