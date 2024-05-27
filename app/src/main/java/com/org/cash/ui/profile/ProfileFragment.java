@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.org.cash.API.ApiService;
+import com.org.cash.API.TokenManager;
 import com.org.cash.CustomToast;
 import com.org.cash.R;
 
@@ -32,8 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ProfileFragment extends Fragment {
 
-    String token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbW1JPTEVfdXNlcl1dIiwidXNlcm5hbWUiOiJsb2N0ZXN0NSIsImV4cCI6MTcxNDkyODkyMX0.v2napx5v9rGKp0dWvkI7otmoXBEJEJgvm5X8ATuRarlraX-zmWPCN24K4gTF-i1vpg6ZHG5gvymEuAm4RiJNnQ";
-    Retrofit retrofit = new Retrofit.Builder()
+       Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
@@ -130,7 +130,7 @@ public class ProfileFragment extends Fragment {
                 user.setEmail(String.valueOf(editText_Email.getText()));
                 user.setPhoneNumber(editText_Phone.getText().toString());
                 //Log.e("ProfileFragment", "Error: " + editText_Phone.getText());
-                AtomicReference<Call<User>> call = new AtomicReference<>(apiService.updateData(user, token));
+                AtomicReference<Call<User>> call = new AtomicReference<>(apiService.updateData(user, TokenManager.getInstance().getToken()));
                 call.get().enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
@@ -169,7 +169,7 @@ public class ProfileFragment extends Fragment {
                 pwd.oldPwd = String.valueOf(editText_old_pwd.getText());
                 pwd.reTypePwd = String.valueOf(editText_reType_pwd.getText());
 
-                AtomicReference<Call<User>> call = new AtomicReference<>(apiService.updatePwdData(pwd, token));
+                AtomicReference<Call<User>> call = new AtomicReference<>(apiService.updatePwdData(pwd, TokenManager.getInstance().getToken()));
                 call.get().enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
@@ -202,18 +202,20 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        AtomicReference<Call<User>> call = new AtomicReference<>(apiService.fetchData(token));
+        AtomicReference<Call<User>> call = new AtomicReference<>(apiService.fetchData(TokenManager.getInstance().getToken()));
         call.get().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User resource = response.body();
-
-                user = resource;
-                name.setText(resource.getUsername());
-                mail.setText(resource.getEmail());
-                editText_Name.setText(resource.getUsername());
-                editText_Email.setText(resource.getEmail());
-                editText_Phone.setText(resource.getPhoneNumber());
+                try {
+                    user = resource;
+                    name.setText(resource.getUsername());
+                    mail.setText(resource.getEmail());
+                    editText_Name.setText(resource.getUsername());
+                    editText_Email.setText(resource.getEmail());
+                    editText_Phone.setText(resource.getPhoneNumber());
+                }
+                catch (Exception e){}
             }
 
             @Override
@@ -271,7 +273,7 @@ public class ProfileFragment extends Fragment {
             int itemId = item.getItemId();
             if (itemId == R.id.profile_navigation_my_account) {
 
-                call.set(apiService.fetchData(token));
+                call.set(apiService.fetchData(TokenManager.getInstance().getToken()));
                 call.get().enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

@@ -3,7 +3,7 @@ package com.org.cash.DAO;
 import androidx.lifecycle.LiveData;
 import androidx.room.*;
 import com.org.cash.model.Transaction;
-
+import java.util.List;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +31,12 @@ public interface TransactionDao {
 
     @Delete()
     void delete(Transaction transaction);
+
+    @Query("SELECT DISTINCT time FROM trans ORDER BY time")
+    List<Long> getUniqueTransactionTimes();
+
+    @Query("SELECT * FROM trans WHERE time = :transactionTime")
+    List<Transaction> getTransactionsByTime(long transactionTime);
 
     default void deleteById(int transactionId){
         delete(findById(transactionId));
