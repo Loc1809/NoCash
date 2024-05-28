@@ -21,8 +21,15 @@ public interface TransactionDao {
     @Query("SELECT * FROM trans WHERE time BETWEEN (:start) AND (:end)")
     List<Transaction> getTransactionsByMonth(long start, long end);
 
+    @Query("SELECT * FROM trans WHERE category = :cate AND time BETWEEN (:start) AND (:end)")
+    List<Transaction> getTransactionsByMonthAndCate(long start, long end, String cate);
+
+    @Query("SELECT SUM(amount) FROM trans WHERE category = :cate AND time BETWEEN (:start) AND (:end)")
+    Double getSumByMonthAndCate(long start, long end, String cate);
+
     @Query("SELECT * FROM trans WHERE id IN (:transactionIds)")
     Transaction findById(int transactionIds);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(Transaction transaction);
 

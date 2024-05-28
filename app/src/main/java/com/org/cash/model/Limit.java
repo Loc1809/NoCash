@@ -17,10 +17,10 @@ public class Limit {
     String category;
 
     @ColumnInfo(name="startDate")
-    String startDate;
+    long startDate;
 
     @ColumnInfo(name="endDate")
-    String endDate;
+    long endDate;
 
     @ColumnInfo(name = "direction")
     int direction; // 0 for income, 1 for outcome
@@ -28,7 +28,7 @@ public class Limit {
     public Limit() {
     }
 
-    public Limit(double amount, String category, String startDate, String endDate, int type) {
+    public Limit(double amount, String category, long startDate, long endDate, int type) {
         this.amount = amount;
         this.category = category;
         this.startDate = startDate;
@@ -60,19 +60,19 @@ public class Limit {
         this.amount = amount;
     }
 
-    public String getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(long endDate) {
         this.endDate = endDate;
     }
 

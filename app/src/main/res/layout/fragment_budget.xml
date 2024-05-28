@@ -1,124 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:id="@+id/fragment_home" android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".ui.statistics.StatisticsFragment" tools:ignore="MissingClass"
-                android:background="#A4FFFFFF">
-    <!--    <com.github.mikephil.charting.charts.BarChart-->
-    <!--            android:id="@+id/idBarChart"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent" />-->
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+                        <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@color/white"
+                                app:srcCompat="@drawable/baseline_keyboard_arrow_left_24_black"
+                                android:layout_gravity="start"
+                                android:id="@+id/go_back"/>
+                        <TextView
+                                android:id="@+id/month_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@string/font_family"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:layout_weight="3"
+                                android:capitalize="sentences"
+                                tools:ignore="Deprecated"
+                                android:gravity="right"/>
+                        <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                app:srcCompat="@drawable/baseline_keyboard_arrow_right_24_black"
+                                android:layout_weight="1"
+                                android:background="@color/white"
+                                android:id="@+id/go"/>
+                    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <androidx.cardview.widget.CardView
-                android:layout_width="390dp"
-                android:layout_height="273dp"
-                app:cardCornerRadius="16dp" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                android:background="#968FF4" android:id="@+id/cardView">
-            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="10dp"
+                app:cardCornerRadius="16dp"
+                android:layout_weight="1"
+                app:cardElevation="4dp">
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                <View
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+                <ImageButton
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/baseline_arrow_downward_24"/>
+                <TextView
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/txt_outcome"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/view2" android:background="#5D4FF8"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
-                <TextView
-                        android:layout_width="339dp"
-                        android:layout_height="50dp" android:id="@+id/textView" android:text="3.200.200.00"
-                        android:textSize="24sp" android:textColor="#FFFFFF" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="84dp" app:layout_constraintHorizontal_bias="0.313"/>
-                <TextView
-                        android:layout_width="339dp"
-                        android:layout_height="42dp" android:id="@+id/textView1" android:text="Amount you can spend"
-                        android:textSize="24sp" android:textColor="#FFFFFF" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="44dp" app:layout_constraintHorizontal_bias="0.313"/>
-                <View
-                        android:layout_width="9dp"
-                        android:layout_height="76dp" android:id="@+id/view3"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                        android:background="#ACBFF6" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.352" android:layout_marginBottom="4dp"/>
-                <View
-                        android:layout_width="8dp"
-                        android:layout_height="76dp" android:id="@+id/view4"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                        android:background="#ACBFF6" app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.657" android:layout_marginBottom="4dp"/>
-                <TextView
-                        android:text="Total bugdet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/totalBudgetLabel"
-                        android:textColor="#FFFFFF" app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.053"
-                        android:textSize="16sp" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.936"/>
-                <TextView
-                        android:text="5.2 M"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/totalBudget"
-                        android:textColor="#FFFFFF" app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.14"
-                        android:textSize="16sp" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.804"/>
-                <TextView
-                        android:text="Total spend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/totalSpendLabel"
-                        android:textColor="#FFFFFF" android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/view2" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.936" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                <TextView
-                        android:text="2.0 M"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/totalSpend"
-                        android:textColor="#FFFFFF" android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.804" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"/>
-                <TextView
-                        android:text="End of budget"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/endOfBudgetLabel"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.951"
-                        android:textColor="#FFFFFF" android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.936"/>
-                <TextView
-                        android:text="12 days"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/endOfBudget"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.895"
-                        android:textColor="#FFFFFF" android:textSize="16sp" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.804"/>
-                <Button
-                        android:text="Create budget"
-                        android:layout_width="81dp"
-                        android:layout_height="55dp" android:id="@+id/button5"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.949"
-                        app:layout_constraintVertical_bias="0.195" android:textSize="10sp"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family"
+                        android:textColor="@color/red"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:text="20 đ"
+                        android:layout_gravity="center"
+                        android:gravity="right"
+                />
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="409dp"
-                android:layout_height="456dp"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/cardView"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="16dp"
+                android:layout_weight="1"
+                app:cardElevation="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+                                <ImageButton
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:background="@color/white"
+                                        app:srcCompat="@drawable/baseline_arrow_downward_24"/>
+                                <TextView
+                                        android:id="@+id/txt_income"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@string/font_family"
+                                        android:textColor="@color/mdtp_red"
+                                        android:textSize="20sp"
+                                        android:textStyle="bold"
+                                        android:text="20 đ"
+                                        android:layout_gravity="center"
+                                        android:gravity="right"
+                                />
+                    </LinearLayout>
+            </androidx.cardview.widget.CardView>
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/parentTransLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/budget_trans_list"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/fragment_spend_limit"
+                    tools:ignore="MissingConstraints"
+            />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

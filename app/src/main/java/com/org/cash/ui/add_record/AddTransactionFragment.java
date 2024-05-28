@@ -378,9 +378,9 @@ public class AddTransactionFragment extends Fragment  {
 //           LOC NOTE: LIMIT
             String datetimeString = binding.editTextCal.getText().toString();
             String[] monthYear = datetimeString.split("/");
-            Long[] timestamps = Common.getStartEndOfMonth(Integer.parseInt(monthYear[0]), Integer.parseInt(monthYear[1]));
+            Long[] timestamps = Common.getStartEndOfMonth(Integer.parseInt(monthYear[0]) - 1, Integer.parseInt(monthYear[1]));
             MoneyDb.databaseWriteExecutor.execute(() -> {
-                Limit limit = new Limit(amount, category, timestamps[0].toString(), timestamps[1].toString(), direction);
+                Limit limit = new Limit(amount, category, timestamps[0], timestamps[1], direction);
                 if (limitId != 0)
                     limit.setId(limitId);
 

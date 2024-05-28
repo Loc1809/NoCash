@@ -43,7 +43,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public int getItemCount() {
-        if (arrayList != null && arrayList.size() > 0)
+        if (arrayList != null && !arrayList.isEmpty())
             return arrayList.size();
         else
             return 0;

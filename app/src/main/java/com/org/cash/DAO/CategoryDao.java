@@ -12,6 +12,7 @@ import com.org.cash.CustomToast;
 import com.org.cash.model.Category;
 import com.org.cash.model.Limit;
 
+import java.util.Collection;
 import java.util.List;
 
 @Dao
@@ -37,6 +38,12 @@ public interface CategoryDao {
 
     @Query("SELECT * FROM category WHERE type = :type AND name = :name")
     List<Category> findAllByTypeAndName(int type, String name);
+
+    @Query("SELECT * FROM category WHERE name IN (:name)")
+    List<Category> findAllByNames(Collection<String> name);
+
+    @Query("SELECT * FROM category WHERE name = (:name)")
+    Category findByName(String name);
 
     @Query("SELECT * FROM category WHERE type = :type")
     List<Category> getCategoriesIsInAndType(int type);

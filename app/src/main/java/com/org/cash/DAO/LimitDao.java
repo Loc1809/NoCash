@@ -22,8 +22,11 @@ public interface LimitDao {
     @Query("SELECT * FROM `limit` WHERE id IN (:limitIds)")
     LiveData<List<Limit>> loadAllByIds(Collection<Integer> limitIds);
 
-    @Query("SELECT * FROM `limit` WHERE startDate BETWEEN (:start) AND (:end)")
+    @Query("SELECT * FROM `limit` WHERE startDate = :start OR startDate BETWEEN (:start) AND (:end)")
     List<Limit> getLimitsByMonth(long start, long end);
+
+    @Query("SELECT * FROM `limit` WHERE startDate = :start")
+    List<Limit> getLimitsByMonth(long start);
 
     @Query("SELECT * FROM `limit` WHERE direction = :type AND category = :cate AND startDate BETWEEN (:start) AND (:end)")
     List<Limit> getLimitsByMonthTypeAndCate(long start, long end, int type, String cate);
