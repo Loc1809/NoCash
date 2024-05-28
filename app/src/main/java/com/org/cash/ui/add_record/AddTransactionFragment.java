@@ -137,6 +137,7 @@ public class AddTransactionFragment extends Fragment  {
             @Override
             public void onClick(View view) {
                 CustomToast.makeText(requireContext(), "Cleared", Toast.LENGTH_SHORT, 2).show();
+                Common.hideSoftKeyboard(requireContext(), binding.getRoot());
                 binding.editTextAmount.setText("");
                 binding.editTextCategory.setText("");
                 binding.editTextWallet.setText("");
@@ -177,6 +178,7 @@ public class AddTransactionFragment extends Fragment  {
         bottomSheetDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
+                Common.hideSoftKeyboard(requireContext(), binding.getRoot());
                 binding.arrowSelectCate.setImageResource(R.drawable.baseline_keyboard_arrow_right_24_purple);
                 binding.arrowSelectWallet.setImageResource(R.drawable.baseline_keyboard_arrow_right_24_purple);
             }

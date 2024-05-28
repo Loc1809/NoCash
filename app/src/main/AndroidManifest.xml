@@ -31,10 +31,6 @@
                 android:name=".LoginActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.add_record.AddTransactionFragment"
-                android:exported="false"
-                android:windowSoftInputMode="adjustPan"/>
-        <activity
                 android:name=".MainActivity"
                 android:exported="true"
                 android:label="@string/app_name">
