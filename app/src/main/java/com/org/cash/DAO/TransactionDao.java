@@ -38,6 +38,9 @@ public interface TransactionDao {
     @Query("SELECT * FROM trans WHERE time = :transactionTime")
     List<Transaction> getTransactionsByTime(long transactionTime);
 
+    @Query("SELECT * FROM trans WHERE time = :transactionTime AND category = :category")
+    List<Transaction> getTransactionsByTimeAndCategory(long transactionTime, String category);
+
     default void deleteById(int transactionId){
         delete(findById(transactionId));
     };

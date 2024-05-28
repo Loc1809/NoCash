@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <ImageView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/baseline_wallet_24"
+                android:id="@+id/statitics_cate_icon"/>
+        <TextView
+                android:id="@+id/statitics_category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="category"
+                android:padding="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:padding="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        <TextView
+                android:id="@+id/statitics_category_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="time"
+                android:padding="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+    </LinearLayout>
+
+
+    <!-- NestedScrollView bao bọc RecyclerView -->
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6" >
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/statitics_category_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

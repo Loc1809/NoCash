@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,12 +32,14 @@ import java.util.List;
 
 
 public class StatisticsFragment extends Fragment {
-    
+
+    FragmentManager fragmentManager;
     private MoneyDb db;
     private RecyclerView recyclerView;
     private List<Long> list = new ArrayList<>();
     private BudgetAdapter budgetAdapter;
-
+    private TextView increase;
+    private TextView decrease;
     private FragmentStatisticsBinding binding;
     private HomeViewModel homeViewModel;
     private TextView uName, monthTitle, yearTitle, balance;
@@ -56,9 +59,13 @@ public class StatisticsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout using data binding
         binding = FragmentStatisticsBinding.inflate(inflater, container, false);
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        fragmentManager = requireActivity().getSupportFragmentManager();
+
         recyclerView = binding.statiticsRecyclerView;
         recyclerView.setAdapter(budgetAdapter);
         // Access views through the binding object
@@ -66,6 +73,8 @@ public class StatisticsFragment extends Fragment {
         yearTitle = binding.getRoot().findViewById(R.id.budget_year_text);
         balance = binding.getRoot().findViewById(R.id.balance_statitics);
 
+        decrease = binding.getRoot().findViewById(R.id.decrease);
+        increase = binding.getRoot().findViewById(R.id.increase);
         // Set up click listeners
         binding.budgetGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +126,11 @@ public class StatisticsFragment extends Fragment {
                 walletsList = (ArrayList<Wallet>) db.walletDao().getWallets();
                 Double amount = 0.0;
                 for (Wallet w : walletsList) {
+
                     amount += w.getAmount();
                 }
-                balance.setText(amount.toString());
+
+                balance.setText(amount.toString() + " VND");
 
             });
         } catch (Exception ex) {
@@ -184,13 +195,33 @@ public class StatisticsFragment extends Fragment {
         transactionsList = (ArrayList<Transaction>) db.transactionDao().getTransactionsByMonth(timestamp[0], timestamp[1]);
         recyclerView.setAdapter(null);
         list.clear();
+
+        Double increaseAmount = 0.0;
+        Double decreaseAmount = 0.0;
+
+        if(transactionsList.size()==0){
+            increase.setText("+ 0.0");
+            decrease.setText("- 0.0");
+        }
+
         for (Transaction e : transactionsList
         ) {
+
+            if(e.getAmount()>0.0){
+                increaseAmount += e.getAmount();
+            }
+            else{
+                decreaseAmount += e.getAmount();
+            }
+            increase.setText("+ " + increaseAmount.toString());
+            decrease.setText("- " + decreaseAmount.toString());
+
             if (!list.contains(e.getTime())) {
                 list.add(e.getTime());
             }
 
-            budgetAdapter = new BudgetAdapter(context, list);
+
+            budgetAdapter = new BudgetAdapter( fragmentManager,context, list);
 
             recyclerView = rootView.findViewById(R.id.statitics_recycler_view);
             recyclerView.setAdapter(budgetAdapter);

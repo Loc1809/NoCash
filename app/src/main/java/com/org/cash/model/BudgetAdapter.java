@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
@@ -25,9 +26,12 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
     private MoneyDb db;
     private Context context; // Add a context variable
 
-    public BudgetAdapter(Context context, List<Long> list) {
+    FragmentManager fragmentManager;
+
+    public BudgetAdapter(FragmentManager fragmentManager,Context context, List<Long> list) {
         this.context = context;
         this.list = list;
+        this.fragmentManager = fragmentManager;
     }
 
 
@@ -80,14 +84,14 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetView
             sum += e.getAmount();
         }
         if (sum < 0) {
-            budgetViewHolder.sum.setTextColor(Color.RED);
+//            budgetViewHolder.sum.setTextColor(Color.RED);
             budgetViewHolder.sum.setText("-" + sum + " VND");
         } else if (sum > 0) {
-            budgetViewHolder.sum.setTextColor(Color.parseColor("#008000"));
+//            budgetViewHolder.sum.setTextColor(Color.parseColor("#008000"));
             budgetViewHolder.sum.setText("+" + sum + " VND");
         } else
             budgetViewHolder.sum.setText(sum + " VND");
-        budgetViewHolder.transactionAdapter = new TransactionAdapter(budgetViewHolder.list);
+        budgetViewHolder.transactionAdapter = new TransactionAdapter(fragmentManager,context,budgetViewHolder.list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         budgetViewHolder.transaction.setLayoutManager(linearLayoutManager);
         budgetViewHolder.transaction.setAdapter(budgetViewHolder.transactionAdapter);
