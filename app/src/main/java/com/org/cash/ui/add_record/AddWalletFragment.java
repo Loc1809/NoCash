@@ -105,13 +105,22 @@ public class AddWalletFragment extends Fragment {
             hnHandler = new Handler(Looper.getMainLooper());
             MoneyDb.databaseWriteExecutor.execute(() -> {
                 Wallet wallet = new Wallet(name, amount);
-                db.walletDao().checkBeforeInsert(wallet, requireContext(), hnHandler);
-                hnHandler.post(() -> {
-                    if (isAdded()) {
-                        binding.editTextName.setText("");
-                        binding.editTextAmount.setText("");
-                    }
-                });
+                if (walletId != 0)
+                    wallet.setId(walletId);
+                if (!db.walletDao().isAnySimilarWallet(wallet)){
+                    db.walletDao().checkBeforeInsert(wallet, requireContext(), hnHandler);
+                    hnHandler.post(() -> {
+                        if (isAdded()) {
+                            binding.editTextName.setText("");
+                            binding.editTextAmount.setText("");
+                        }
+                    });
+                } else {
+                    hnHandler.post(() -> {
+                        CustomToast.makeText(requireContext(), "Wallet existed", Toast.LENGTH_SHORT, 2).show();
+                        binding.editTextName.setError("Wallet existed");
+                    });
+                }
             });
         }
         return true;

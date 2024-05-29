@@ -2,13 +2,14 @@ package com.org.cash.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "limit")
 public class Limit {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
-    int id = -1;
+    Integer id;
 
     @ColumnInfo(name="amount")
     double amount;
@@ -36,6 +37,16 @@ public class Limit {
         this.direction = type;
     }
 
+    @Ignore
+    public Limit(int id, double amount, String category, long startDate, long endDate, int type) {
+        this.id = id;
+        this.amount = amount;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.direction = type;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -44,7 +55,7 @@ public class Limit {
         this.category = category;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

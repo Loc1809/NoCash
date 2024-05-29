@@ -7,7 +7,7 @@ import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.room.*;
 import com.org.cash.CustomToast;
-import com.org.cash.model.Limit;
+import com.org.cash.model.Wallet;
 import com.org.cash.model.Wallet;
 
 import java.util.Collection;
@@ -56,5 +56,13 @@ public interface WalletDao {
                 CustomToast.makeText(context, "Wallet existed", Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+
+    default boolean isAnySimilarWallet(Wallet wallet){
+        if (wallet.getId() == null)
+            return false;
+        List<Wallet> list = findByName(wallet.getName());
+        return !list.isEmpty();
     }
 }

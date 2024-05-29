@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
 import com.org.cash.databinding.FragmentSpendLimitBinding;
@@ -51,6 +52,9 @@ public class LimitAdapter extends RecyclerView.Adapter<LimitAdapter.MyViewHolder
         holder.detail.setText(String.valueOf(limit.getDetails()));
         holder.progress.setProgress(limit.getProgress());
 
+        if (limit.getProgress() > 90){
+            holder.progress.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.exceed_limit_progressbar));
+        }
         if (limit.getDirection() == 0){
             // 0 for income, 1 for outcome
             holder.amount.setTextColor(Color.GREEN);

@@ -18,6 +18,9 @@ import java.util.List;
 @Dao
 public interface CategoryDao {
 
+    @Query("SELECT * FROM category")
+    List<Category> findAll();
+
     @Query("SELECT * FROM category WHERE id = :id LIMIT 1")
     Category findById(int id);
 
@@ -71,5 +74,12 @@ public interface CategoryDao {
                 CustomToast.makeText(context, "Category existed", Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+    default boolean findSimilarCategory(Category category){
+        if (category.getId() == null)
+            return false;
+        List<Category> list = findAllByTypeAndName(category.getType(), category.getName());
+        return !list.isEmpty();
     }
 }

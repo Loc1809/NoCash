@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.org.cash.CustomToast;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentAddCategoryBinding;
@@ -174,8 +175,11 @@ public class AddCategoryFragment extends Fragment {
             db = MoneyDb.getDatabase(context);
 
             List<Category> itemList = db.categoryDao().findAllByType(direction);
-            if (itemList.isEmpty())
+            if (itemList.isEmpty()){
                 hideBottomSheet();
+                CustomToast.makeText(requireContext(), "There is no category", Toast.LENGTH_SHORT, 2).show();
+            }
+
             int columnCount = 3;
             int rowCount = (itemList.size() + columnCount - 1) / columnCount;
             gridLayout.setRowCount(rowCount);
@@ -228,19 +232,21 @@ public class AddCategoryFragment extends Fragment {
 
         MoneyDb.databaseWriteExecutor.execute(() -> {
             Category category = new Category(name, direction, currentIcon);
-            if (currentId != -1) {
+            if (currentId != -1)
                 category.setId(currentId);
-            }
-
-            db.categoryDao().checkBeforeInsert(category, context, hnHandler);
-
-            hnHandler.post(() -> {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
-                    binding.editTextName.setText("");
-                    binding.placeholderIconSelect.setHint(R.string.category_icon);
-                }
-            });
+            if (!db.categoryDao().findSimilarCategory(category)){
+                db.categoryDao().checkBeforeInsert(category, context, hnHandler);
+                hnHandler.post(() -> {
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                        binding.editTextName.setText("");
+                        binding.placeholderIconSelect.setHint(R.string.category_icon);
+                    }
+                });
+            } else
+                hnHandler.post(() -> {
+                    CustomToast.makeText(requireContext(), "Category existed", Toast.LENGTH_SHORT, 2).show();
+                });
         });
 
         return true;

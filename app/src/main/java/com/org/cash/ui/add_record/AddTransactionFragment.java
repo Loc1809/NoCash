@@ -128,7 +128,6 @@ public class AddTransactionFragment extends Fragment  {
         binding.addTransactionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomToast.makeText(requireContext(), "Created", Toast.LENGTH_SHORT, 1).show();
                 onSave();
             }
         });
@@ -251,13 +250,13 @@ public class AddTransactionFragment extends Fragment  {
 
     private void showMonthYearPicker() {
         MonthYearPickerDialog dialog = MonthYearPickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    String selectedDate = (month + 1) + "/" + year;
-                    binding.editTextCal.setText(selectedDate);
-                }
-            });
-            dialog.show(getFragmentManager(), "MonthYearPickerDialog");
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String selectedDate = (month + 1) + "/" + year;
+                binding.editTextCal.setText(selectedDate);
+            }
+        });
+        dialog.show(getFragmentManager(), "MonthYearPickerDialog");
     }
 
     private void addWalletToBottomSheet(Context context) {
@@ -380,20 +379,24 @@ public class AddTransactionFragment extends Fragment  {
             String[] monthYear = datetimeString.split("/");
             Long[] timestamps = Common.getStartEndOfMonth(Integer.parseInt(monthYear[0]) - 1, Integer.parseInt(monthYear[1]));
             MoneyDb.databaseWriteExecutor.execute(() -> {
-                Limit limit = new Limit(amount, category, timestamps[0], timestamps[1], direction);
+                Limit limit = new Limit(-1, amount, category, timestamps[0], timestamps[1], direction);
                 if (limitId != 0)
                     limit.setId(limitId);
-
-                db.limitDao().checkBeforeInsert(limit, context, hnHandler);
-                hnHandler.post(() -> {
-                    if (isAdded()){
+                if (!db.limitDao().isAnySimilarLimit(limit)){
+                    Limit insert = new Limit(amount, category, timestamps[0], timestamps[1], direction);
+                    db.limitDao().insert(insert);
+                    hnHandler.post(() -> {
+                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
                         binding.editTextAmount.setText("");
                         binding.editTextCategory.setText("");
-                        binding.editTextWallet.setText("");
                         binding.editTextCal.setText("");
-                        binding.editTextNote.setText("");
-                    }
-                });
+                    });
+                } else
+                    hnHandler.post(() -> {
+                        CustomToast.makeText(requireContext(), "Limit existed", Toast.LENGTH_SHORT, 2).show();
+                        binding.editTextCategory.setError("Limit existed");
+                    });
+
             });
         }
         return true;
@@ -405,6 +408,7 @@ public class AddTransactionFragment extends Fragment  {
         binding.editTextWallet.setText("");
         binding.editTextCal.setText("");
         binding.editTextNote.setText("");
+        Common.hideSoftKeyboard(requireContext(), binding.getRoot());
     }
 
     public void selectDirection(int id){

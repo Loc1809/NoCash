@@ -57,4 +57,12 @@ public interface LimitDao {
             });
         }
     }
+
+    default boolean isAnySimilarLimit(Limit limit){
+        if (limit.getId() != -1)
+            return false;
+        List<Limit> list = getLimitsByMonthTypeAndCate(Long.valueOf(limit.getStartDate()),
+                Long.valueOf(limit.getEndDate()), limit.getType(), limit.getCategory());
+        return !list.isEmpty();
+    }
 }

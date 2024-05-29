@@ -13,28 +13,36 @@ import java.util.List;
 public class Category {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int id = -1;
+    private Integer id;
 
     @ColumnInfo(name = "name")
     private String name;
 
     @ColumnInfo(name = "type")
-    private int type;
+    private Integer type;
 
     @ColumnInfo(name = "icon")
-    private int icon;
+    private Integer icon;
 
-    public Category(String name, int type, int icon) {
+    public Category(Integer id, String name, Integer type, Integer icon) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.icon = icon;
     }
 
-    public int getId() {
+    @Ignore
+    public Category(String name, Integer type, Integer icon) {
+        this.name = name;
+        this.type = type;
+        this.icon = icon;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -46,19 +54,19 @@ public class Category {
         this.name = name;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public int getIcon() {
+    public Integer getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(Integer icon) {
         this.icon = icon;
     }
 }

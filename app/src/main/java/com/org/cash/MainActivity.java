@@ -32,9 +32,7 @@ import com.org.cash.DAO.WalletDao;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.ActivityMainBinding;
-import com.org.cash.model.Transaction;
-import com.org.cash.model.User;
-import com.org.cash.model.Wallet;
+import com.org.cash.model.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,8 +42,11 @@ import java.io.File;
 import java.util.List;
 
 import com.org.cash.ui.home.HomeViewModel;
+import com.org.cash.utils.Common;
 import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.GlobalScope;
+import net.bytebuddy.jar.asm.Handle;
+
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
@@ -58,12 +59,14 @@ public class MainActivity extends AppCompatActivity {
                 Random rand = new Random();
         Context context = this;
         MoneyDb db = MoneyDb.getDatabase(context);
+        Handler hnHandler = new Handler(Looper.getMainLooper());
+
         MoneyDb.databaseWriteExecutor.execute(() -> {
              List<Transaction> list  = db.transactionDao().getTransactions();
              try {
                  if (list.size() < 1) {
                      for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate"+rand.nextInt(20), "abc", rand.nextInt(1));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "cate"+rand.nextInt(20), "abc", rand.nextInt(1));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 3) {
                      for (int i = 0; i < 10; i++) {
-                         Wallet newWallet = new Wallet( "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
+                         Wallet newWallet = new Wallet( rand.nextInt(1000), "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.walletDao().insert(newWallet);
                          });
@@ -93,12 +96,65 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                         Wallet newWallet = new Wallet( "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
+                         Wallet newWallet = new Wallet(rand.nextInt(1000), "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.walletDao().insert(newWallet);
                          });
                      }
              }
+        });
+        MoneyDb.databaseWriteExecutor.execute(() -> {
+             List<Category> list  = db.categoryDao().findAll();
+            final boolean[] isOK = {false};
+             try {
+                 if (list.size() < 3) {
+                     for (int i = 0; i < 10; i++) {
+                         Category newCategory = new Category(rand.nextInt(1000), "Category"+rand.nextInt(20), rand.nextInt(2), R.drawable.baseline_attach_money_24);
+                         list.add(newCategory);
+                         MoneyDb.databaseWriteExecutor.execute(() -> {
+                              db.categoryDao().insert(newCategory);
+                              hnHandler.post(()->{
+                                  if (isOK[0])
+                                      return;
+                                  Long[] month = Common.getStartEndOfMonth(4, 2024);
+                                  List<Limit> limitList  = db.limitDao().getLimits();
+                                  try {
+                                      if (limitList.size() < 3) {
+                                          for (int j = 0; j < 10; j++) {
+                                              Category thiscate = list.get(rand.nextInt(list.size()));
+                                              Limit newLimit = new Limit(rand.nextInt(1000), rand.nextInt(10) * 7000.0, thiscate.getName(), month[0], month[1], thiscate.getType());
+                                              MoneyDb.databaseWriteExecutor.execute(() -> {
+                                                  db.limitDao().insert(newLimit);
+                                              });
+                                          }
+                                      }
+                                      isOK[0] = true;
+                                  }
+                                  catch (Exception e){
+                                      for (int j = 0; j < 10; j++) {
+                                          Category thiscate = list.get(rand.nextInt(list.size()));
+                                          Limit newLimit = new Limit(rand.nextInt(10) * 7000.0, thiscate.getName(), month[0], month[1], thiscate.getType());
+                                          MoneyDb.databaseWriteExecutor.execute(() -> {
+                                              db.limitDao().insert(newLimit);
+                                          });
+                                      }
+                                  }});
+                         });
+                     }
+                 }
+             }
+             catch (Exception e){
+                 for (int i = 0; i < 10; i++) {
+                     Category newCategory = new Category( rand.nextInt(1000), "Category"+rand.nextInt(20), rand.nextInt(2), R.drawable.baseline_attach_money_24);
+                     MoneyDb.databaseWriteExecutor.execute(() -> {
+                         db.categoryDao().insert(newCategory);
+                     });
+                 }
+             }
+
+        });
+        MoneyDb.databaseWriteExecutor.execute(() -> {
+
         });
         File dexOutputDir = getCodeCacheDir();
         dexOutputDir.setReadOnly();

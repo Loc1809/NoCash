@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 public class Wallet {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
-    int id = -1;
+    int id;
 
     @ColumnInfo(name="name")
     String name;
@@ -17,7 +17,7 @@ public class Wallet {
     @ColumnInfo(name="amount")
     double amount;
 
-    public Wallet(int id, String name, double amount) {
+    public Wallet(Integer id, String name, double amount) {
         this.id = id;
         this.name = name;
         this.amount = amount;
@@ -29,7 +29,7 @@ public class Wallet {
         this.amount = amount;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
