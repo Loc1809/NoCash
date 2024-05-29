@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +19,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.transactionViewHolder> {
+
+public class StatiticsCategoryAdapter extends RecyclerView.Adapter<StatiticsCategoryAdapter.transactionViewHolder> {
 
     private MoneyDb db;
-
     private Context context;
 
     public List<Transaction> list;
-    FragmentManager fragmentManager;
+    public RecyclerView recyclerView;
 
-    public TransactionAdapter(FragmentManager fragmentManager,Context context, List<Transaction> list) {
+
+    public StatiticsCategoryAdapter(Context context, List<Transaction> list) {
         this.context = context;
         this.list = list;
-        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -44,18 +43,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull TransactionAdapter.transactionViewHolder transactionViewHolder, int i) {
+    public void onBindViewHolder(@NonNull @NotNull StatiticsCategoryAdapter.transactionViewHolder transactionViewHolder, int i) {
         Transaction item = list.get(i);
         if(item==null){
             return;
         }
         db = MoneyDb.getDatabase(context);
-
-
-
         try{
-        Category category = db.categoryDao().findByIdOrName(-1,item.getCategory());
-        transactionViewHolder.cateIcon.setImageResource(category.getIcon());}
+            Category category = db.categoryDao().findByIdOrName(-1,item.getCategory());
+            transactionViewHolder.cateIcon.setImageResource(category.getIcon());}
         catch(Exception ex){}
         transactionViewHolder.categoryname.setText(item.getCategory());
         if(item.getAmount()<0){
@@ -67,17 +63,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             transactionViewHolder.transaction.setText("+" + item.getAmount().toString() + " VND");
         }
         else
-        transactionViewHolder.transaction.setText(item.getAmount().toString() + " VND");
-
-        transactionViewHolder.cateContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long time = item.getTime();
-                StatiticsCategoryFragment dialogFragment = new StatiticsCategoryFragment(context,time,item.getCategory());
-                dialogFragment.show(fragmentManager, "MyDialogFragment");
-                //showAlertDialog(context, "Thông báo", "Đây là nội dung của dialog.", "OK");
-            }
-        });
+            transactionViewHolder.transaction.setText(item.getAmount().toString() + " VND");
     }
 
     @Override
@@ -88,42 +74,18 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     class transactionViewHolder extends RecyclerView.ViewHolder {
         public TextView categoryname;
+
         public TextView transaction;
         public ImageView cateIcon;
-        public View cateContainer;
 
         public transactionViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             cateIcon = itemView.findViewById(R.id.cateIcon);
             categoryname = itemView.findViewById(R.id.category_name);
             transaction = itemView.findViewById(R.id.transaction);
-            cateContainer = itemView.findViewById(R.id.cate_container);
 
         }
     }
 
-
-    private void showAlertDialog(Context context, String title, String message, String buttonText) {
-        // Tạo một AlertDialog.Builder mới
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        // Thiết lập tiêu đề của dialog
-        builder.setTitle(title);
-
-        // Thiết lập nội dung của dialog
-        builder.setMessage(message);
-
-        // Thiết lập button và xử lý sự kiện khi button được nhấn
-        builder.setPositiveButton(buttonText, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // Đóng dialog khi button được nhấn
-                dialog.dismiss();
-            }
-        });
-
-        // Tạo và hiển thị dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
 }

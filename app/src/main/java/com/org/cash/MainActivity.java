@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
                 Random rand = new Random();
         Context context = this;
+
+
+
         MoneyDb db = MoneyDb.getDatabase(context);
         Handler hnHandler = new Handler(Looper.getMainLooper());
 
