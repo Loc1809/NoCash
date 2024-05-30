@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
              List<Transaction> list  = db.transactionDao().getTransactions();
              try {
                  if (list.size() < 1) {
-                     for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
+                     for (int i = 0; i < 50; i++) {
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans" + i, "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
                  }
              }
              catch (Exception e){
-                 for (int i = 0; i < 10; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, 1714536703000L, "aabbcc", "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
+                 for (int i = 0; i < 50; i++) {
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans" + i, "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -111,20 +111,20 @@ public class MainActivity extends AppCompatActivity {
             final boolean[] isOK = {false};
              try {
                  if (list.size() < 3) {
-                     for (int i = 0; i < 10; i++) {
-                         Category newCategory = new Category(rand.nextInt(1000), "Category"+rand.nextInt(20), rand.nextInt(2), R.drawable.baseline_attach_money_24);
+                     for (int i = 0; i < 25; i++) {
+                         Category newCategory = new Category(rand.nextInt(1000), "Category"+i, rand.nextInt(2), R.drawable.baseline_attach_money_24);
                          list.add(newCategory);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                               db.categoryDao().insert(newCategory);
                               hnHandler.post(()->{
                                   if (isOK[0])
                                       return;
-                                  Long[] month = Common.getStartEndOfMonth(4, 2024);
                                   List<Limit> limitList  = db.limitDao().getLimits();
                                   try {
                                       if (limitList.size() < 3) {
-                                          for (int j = 0; j < 10; j++) {
-                                              Category thiscate = list.get(rand.nextInt(list.size()));
+                                          for (int j = 0; j < 20; j++) {
+                                              Long[] month = Common.getStartEndOfMonth(rand.nextInt(3) + 2, 2024);
+                                              Category thiscate = list.get(j);
                                               Limit newLimit = new Limit(rand.nextInt(1000), rand.nextInt(10) * 7000.0, thiscate.getName(), month[0], month[1], thiscate.getType());
                                               MoneyDb.databaseWriteExecutor.execute(() -> {
                                                   db.limitDao().insert(newLimit);
@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
                                   }
                                   catch (Exception e){
                                       for (int j = 0; j < 10; j++) {
-                                          Category thiscate = list.get(rand.nextInt(list.size()));
+                                          Long[] month = Common.getStartEndOfMonth(rand.nextInt(3) + 2, 2024);
+                                          Category thiscate = list.get(j);
                                           Limit newLimit = new Limit(rand.nextInt(10) * 7000.0, thiscate.getName(), month[0], month[1], thiscate.getType());
                                           MoneyDb.databaseWriteExecutor.execute(() -> {
                                               db.limitDao().insert(newLimit);
@@ -203,6 +204,11 @@ public class MainActivity extends AppCompatActivity {
 
         requestStoragePermission();
 
+    }
+
+    public static long getRandomLongBetweenRange(long min, long max) {
+        Random random = new Random();
+        return min + (long) (random.nextDouble() * (max - min));
     }
 
     @Override

@@ -1,117 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".ui.budget.BudgetFragment">
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:background="#E8E8E8">
+            android:layout_marginBottom="50dp"
+            android:overScrollMode="always"
+            android:layout_height="match_parent"
+            android:background="@color/statistic_background">
 
+
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="@dimen/chart_height"
+                app:cardCornerRadius="20dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/cardView3">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/linearLayout" app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24"
+                        android:id="@+id/budget_go_back" android:background="@color/bottom_nav_color"/>
+                <TextView
+                        android:text="Month"
+                        android:id="@+id/budget_month_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@string/font_family"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:capitalize="sentences"
+                        tools:ignore="Deprecated"
+                        android:gravity="right" android:background="@color/bottom_nav_color" android:textColor="#FFFFFF"/>
+                <TextView
+                        android:text="Year"
+                        android:id="@+id/budget_year_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@string/font_family"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="5dp"
+                        android:capitalize="sentences"
+                        tools:ignore="Deprecated"
+                        android:gravity="left" android:background="@color/bottom_nav_color" android:textColor="#FFFFFF"/>
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24"
+                        android:layout_weight="1"
+                        android:id="@+id/budget_go_previous" android:background="@color/bottom_nav_color"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="16dp"
+        android:layout_below="@id/cardView3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:cardElevation="4dp">
+        <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-                android:layout_width="371dp"
-                android:layout_height="43dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/linearLayout" app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
-
-            <ImageButton
-                    android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+              <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:layout_weight="2">
+                    <ImageButton
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/in_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/button_selector"
+                        android:background="@drawable/button_selector"
+                        android:layout_weight="2"
+                    />
+                  <TextView
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintTop_toTopOf="parent"
+                          app:layout_constraintBottom_toBottomOf="parent"
+                          app:layout_constraintEnd_toEndOf="parent"
+                          android:text="Income"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textAllCaps="true"
+                          android:layout_weight="2"
+                          android:textStyle="bold"/>
+              </androidx.constraintlayout.widget.ConstraintLayout>
+              <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/baseline_keyboard_arrow_left_24"
-                    android:id="@+id/budget_go_back" android:background="#FF9DCA"/>
-            <TextView
-                    android:text="Month"
-                    android:id="@+id/budget_month_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@string/font_family"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:capitalize="sentences"
-                    tools:ignore="Deprecated"
-                    android:gravity="right" android:background="#FF9DCA" android:textColor="#FFFFFF"/>
-            <TextView
-                    android:text="Year"
-                    android:id="@+id/budget_year_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@string/font_family"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="5dp"
-                    android:capitalize="sentences"
-                    tools:ignore="Deprecated"
-                    android:gravity="left" android:background="#FF9DCA" android:textColor="#FFFFFF"/>
-            <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/baseline_keyboard_arrow_right_24"
-                    android:layout_weight="1"
-                    android:id="@+id/budget_go_previous" android:background="#FF9DCA"/>
+                    android:layout_weight="2">
+                    <ImageButton
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/out_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/button_selector"
+                        android:background="@drawable/button_selector"/>
+                  <TextView
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintTop_toTopOf="parent"
+                          app:layout_constraintBottom_toBottomOf="parent"
+                          app:layout_constraintEnd_toEndOf="parent"
+                          android:text="Outcome"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textStyle="bold"
+                          android:textAllCaps="true"/>
+              </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </LinearLayout>
+    </RadioGroup>
+    </androidx.cardview.widget.CardView>
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/statitics_recycler_view"
-                android:layout_width="371dp"
-                android:layout_height="484dp"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0.476" app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="372dp"
-                android:layout_height="133dp"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="#FF74B4"
-                app:circularflow_radiusInDP="29dp"
-                app:layout_constraintHorizontal_bias="0.487" android:layout_marginTop="16dp"
-                android:id="@+id/constraintLayout">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/statistic_outer_item"
+                android:layout_below="@+id/cardView"/>
 
-            <TextView
-                    android:text="Balance"
-                    android:layout_width="194dp"
-                    android:layout_height="23dp" android:id="@+id/textView10"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.227"
-                    android:textAlignment="center"
-                    android:textColor="#FFFFFF"/>
-            <TextView
-                    android:textStyle="bold"
-                    android:text="12.990.990.00 VND"
-                    android:layout_width="243dp"
-                    android:layout_height="25dp" android:id="@+id/balance_statitics"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:textAlignment="center" android:textColor="#FFFFFF" android:textSize="20sp"
-                    app:layout_constraintHorizontal_bias="0.503"/>
-            <TextView
-                    android:text="- 0.0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/decrease"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.207"
-                    app:layout_constraintVertical_bias="0.859" android:textStyle="bold" android:textColor="#FF0000"
-                    android:textAlignment="viewStart" android:textSize="20sp"/>
-            <TextView
-                    android:text="+ 0.0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/increase"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.796"
-                    app:layout_constraintVertical_bias="0.859" android:textStyle="bold" android:textColor="#12B841"
-                    android:textAlignment="viewEnd" android:textSize="20sp"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chart1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"/>
 
-
-</FrameLayout>
+    </RelativeLayout>
+</ScrollView>

@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<androidx.cardview.widget.CardView
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          xmlns:tools="http://schemas.android.com/tools"
+          app:cardCornerRadius="16dp"
+          android:layout_margin="10dp"
+          android:orientation="horizontal">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
-    <LinearLayout android:layout_width="wrap_content"
+    <LinearLayout
+            android:background="#B3B3B3"
+            android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal">
         <ImageView
@@ -18,13 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="category"
                 android:padding="16dp"
-                android:textSize="20sp"
-                android:textStyle="bold"/>
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=":"
-                android:padding="16dp"
+                android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
         <TextView
@@ -32,8 +37,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="time"
+                android:gravity="end"
                 android:padding="16dp"
                 android:textSize="20sp"
+                android:layout_weight="1"
                 android:textStyle="bold"/>
     </LinearLayout>
 
@@ -47,9 +54,11 @@
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/statitics_category_recycler_view"
+                tools:listitem="@layout/transaction_by_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
     </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

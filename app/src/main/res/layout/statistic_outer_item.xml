@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="5dp" android:orientation="vertical"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="20dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+    <LinearLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#B3B3B3">
+        <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/day_of_transaction"
+                android:text="23/05/2024"/>
+        <TextView
+                android:textStyle="bold"
+                android:id="@+id/sum_of_transaction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ 3.000.000 VND"/>
+
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="40dp"
+            android:id="@+id/transaction_per_day"
+            android:layout_width="match_parent"
+            tools:listitem="@layout/transaction_by_date"
+            android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.cardview.widget.CardView>

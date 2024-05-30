@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
-import com.org.cash.StatiticsCategoryFragment;
+import com.org.cash.StatiticsCategoryDialogFragment;
 import com.org.cash.database.MoneyDb;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +38,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @NotNull
     @Override
     public transactionViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.transaction_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.transaction_by_date, viewGroup, false);
         return new transactionViewHolder(view);
     }
 
@@ -58,22 +57,20 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         transactionViewHolder.cateIcon.setImageResource(category.getIcon());}
         catch(Exception ex){}
         transactionViewHolder.categoryname.setText(item.getCategory());
-        if(item.getAmount()<0){
+        if(item.direction() == 1){
             transactionViewHolder.transaction.setTextColor(Color.RED);
             transactionViewHolder.transaction.setText("-" + item.getAmount().toString() + " VND");
         }
-        else if(item.getAmount() >0){
+        else {
             transactionViewHolder.transaction.setTextColor(Color.parseColor("#008000"));
             transactionViewHolder.transaction.setText("+" + item.getAmount().toString() + " VND");
         }
-        else
-        transactionViewHolder.transaction.setText(item.getAmount().toString() + " VND");
 
         transactionViewHolder.cateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 long time = item.getTime();
-                StatiticsCategoryFragment dialogFragment = new StatiticsCategoryFragment(context,time,item.getCategory());
+                StatiticsCategoryDialogFragment dialogFragment = new StatiticsCategoryDialogFragment(context, time, item.getCategory());
                 dialogFragment.show(fragmentManager, "MyDialogFragment");
                 //showAlertDialog(context, "Thông báo", "Đây là nội dung của dialog.", "OK");
             }

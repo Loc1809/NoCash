@@ -24,12 +24,12 @@ public class Limit {
     long endDate;
 
     @ColumnInfo(name = "direction")
-    int direction; // 0 for income, 1 for outcome
+    Integer direction; // 0 for income, 1 for outcome
 
     public Limit() {
     }
 
-    public Limit(double amount, String category, long startDate, long endDate, int type) {
+    public Limit(double amount, String category, long startDate, long endDate, Integer type) {
         this.amount = amount;
         this.category = category;
         this.startDate = startDate;
@@ -38,7 +38,7 @@ public class Limit {
     }
 
     @Ignore
-    public Limit(int id, double amount, String category, long startDate, long endDate, int type) {
+    public Limit(Integer id, double amount, String category, long startDate, long endDate, Integer type) {
         this.id = id;
         this.amount = amount;
         this.category = category;
@@ -59,7 +59,7 @@ public class Limit {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -87,19 +87,19 @@ public class Limit {
         this.endDate = endDate;
     }
 
-    public int getType() {
+    public Integer getType() {
         return direction;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.direction = type;
     }
 
-    public int getDirection() {
+    public Integer getDirection() {
         return direction;
     }
 
-    public void setDirection(int direction) {
+    public void setDirection(Integer direction) {
         this.direction = direction;
     }
 }

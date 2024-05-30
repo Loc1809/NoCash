@@ -66,7 +66,6 @@ public class AddTransactionFragment extends Fragment  {
         try {
             if (requireArguments().getString("category") != null) {
 //                if (requireArguments().getString("mode").equals("trans")){
-
                     transId = requireArguments().getInt("id");
                     binding.editTextAmount.setText(String.valueOf(requireArguments().getDouble("amount")));
                     binding.editTextCategory.setText(String.valueOf(requireArguments().getString("category")));
@@ -360,17 +359,45 @@ public class AddTransactionFragment extends Fragment  {
 //           LOC NOTE: TRANSACTION
             Long datetime = Common.getTimeFromString(String.valueOf(binding.editTextCal.getText()));
             MoneyDb.databaseWriteExecutor.execute(() -> {
-                Transaction transaction = new Transaction(amount, datetime, note, category, wallet, direction);
-                if (transId != 0)
-                    transaction.setId(transId);
-
-                long newid = db.transactionDao().insert(transaction);
+                Wallet thisWallet = db.walletDao().findByName(wallet).get(0);
+                hnHandler.post(() -> {
+                    double money = (direction == 0) ? amount : -amount;
+                    if (thisWallet.getAmount() + money < 0){
+                        CustomToast.makeText(requireContext(), "Wallet out of money!", Toast.LENGTH_SHORT, 2).show();
+                        return;
+                    }
+                    thisWallet.setAmount(thisWallet.getAmount() + money);
+                    db.walletDao().insert(thisWallet);
+                    Transaction transaction = new Transaction(amount, datetime, note, category, wallet, direction);
+                    if (transId != 0)
+                        transaction.setId(transId);
+                    String[] monthYear = binding.editTextCal.getText().toString().split("-");
+                    Long[] timestamp = Common.getStartEndOfMonth(Integer.parseInt(monthYear[1]) - 1, Integer.parseInt(monthYear[2]));
+                    List<Limit> limit = db.limitDao().getLimitsByMonthTypeAndCate(timestamp[0], timestamp[1], transaction.direction(), transaction.getCategory());
+                    String message;
+                    int type;
+                    if (!limit.isEmpty()) {
+                        double sum = db.transactionDao().getSumByMonthAndCate(timestamp[0], timestamp[1], transaction.getCategory());
+                        if (sum + transaction.getAmount() < limit.get(0).getAmount()){
+                            message = "You reached " + (int) sum + "|" + (int) limit.get(0).getAmount();
+                            type = 1;
+                        } else {
+                            message = "Limit exceeded "  +  (int) sum + "|" + (int) limit.get(0).getAmount();
+                            type = 2;
+                        }
+                    }else {
+                        message = "Success";
+                        type = 1;
+                    }
+                    CustomToast.makeText(requireContext(), message, Toast.LENGTH_SHORT, type).show();
+                    long newid = db.transactionDao().insert(transaction);
                     hnHandler.post(() -> {
                         binding.editTextAmount.setText("");
                         binding.editTextCategory.setText("");
                         binding.editTextWallet.setText("");
                         binding.editTextCal.setText("");
                         binding.editTextNote.setText("");
+                    });
                 });
             });
         } else {
@@ -386,7 +413,7 @@ public class AddTransactionFragment extends Fragment  {
                     Limit insert = new Limit(amount, category, timestamps[0], timestamps[1], direction);
                     db.limitDao().insert(insert);
                     hnHandler.post(() -> {
-                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT, 1).show();
                         binding.editTextAmount.setText("");
                         binding.editTextCategory.setText("");
                         binding.editTextCal.setText("");

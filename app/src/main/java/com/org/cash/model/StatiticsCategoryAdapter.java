@@ -1,8 +1,6 @@
 package com.org.cash.model;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
-import com.org.cash.StatiticsCategoryFragment;
 import com.org.cash.database.MoneyDb;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +34,7 @@ public class StatiticsCategoryAdapter extends RecyclerView.Adapter<StatiticsCate
     @NotNull
     @Override
     public transactionViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.transaction_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.transaction_by_date, viewGroup, false);
         return new transactionViewHolder(view);
     }
 
@@ -52,8 +48,8 @@ public class StatiticsCategoryAdapter extends RecyclerView.Adapter<StatiticsCate
         try{
             Category category = db.categoryDao().findByIdOrName(-1,item.getCategory());
             transactionViewHolder.cateIcon.setImageResource(category.getIcon());}
-        catch(Exception ex){}
-        transactionViewHolder.categoryname.setText(item.getCategory());
+        catch(Exception ignored){}
+        transactionViewHolder.categoryname.setText(item.getDesc());
         if(item.getAmount()<0){
             transactionViewHolder.transaction.setTextColor(Color.RED);
             transactionViewHolder.transaction.setText("-" + item.getAmount().toString() + " VND");

@@ -1,12 +1,19 @@
 package com.org.cash.ui.statistics;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.DatePicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,16 +21,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentStatisticsBinding;
-import com.org.cash.model.BudgetAdapter;
+import com.org.cash.model.StatisticAdapter;
 import com.org.cash.model.Transaction;
 import com.org.cash.model.Wallet;
-import com.org.cash.ui.home.HomeViewModel;
+import com.org.cash.utils.MonthYearPickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,29 +48,65 @@ import java.util.Date;
 import java.util.List;
 
 
-public class StatisticsFragment extends Fragment {
+public class StatisticsFragment extends Fragment implements OnChartValueSelectedListener {
 
     FragmentManager fragmentManager;
     private MoneyDb db;
     private RecyclerView recyclerView;
-    private List<Long> list = new ArrayList<>();
-    private BudgetAdapter budgetAdapter;
-    private TextView increase;
-    private TextView decrease;
+    private StatisticAdapter statisticAdapter;
     private FragmentStatisticsBinding binding;
-    private HomeViewModel homeViewModel;
-    private TextView uName, monthTitle, yearTitle, balance;
+    private TextView  monthTitle, yearTitle;
     private ArrayList<Wallet> walletsList;
     private ArrayList<Transaction> transactionsList;
     private Handler hnHandler;
     private int currentMonth, currentYear;
     private final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    private PieChart chart;
+    private int direction = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentStatisticsBinding.inflate(getLayoutInflater());
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+    }
+
+    private void moveOffScreen() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
+        int height = displayMetrics.heightPixels;
+
+        int offset = (int) (height * 0.35); /* percent to move */
+
+        RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) chart.getLayoutParams();
+        rlParams.setMargins(0, 0, 0, -offset);
+        chart.setLayoutParams(rlParams);
+    }
+
+    private void prepareDataChart(int count, float range) {
+        db = MoneyDb.getDatabase(requireContext());
+        ArrayList<PieEntry> values = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            values.add(new PieEntry((float) ((Math.random() * range) + range / 5), "test"));
+        }
+
+        PieDataSet dataSet = new PieDataSet(values, "Election Results");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        chart.setData(data);
+
+        chart.invalidate();
     }
 
     @Override
@@ -67,14 +120,40 @@ public class StatisticsFragment extends Fragment {
         fragmentManager = requireActivity().getSupportFragmentManager();
 
         recyclerView = binding.statiticsRecyclerView;
-        recyclerView.setAdapter(budgetAdapter);
+        recyclerView.setAdapter(statisticAdapter);
         // Access views through the binding object
         monthTitle = binding.getRoot().findViewById(R.id.budget_month_text);
         yearTitle = binding.getRoot().findViewById(R.id.budget_year_text);
-        balance = binding.getRoot().findViewById(R.id.balance_statitics);
+        selectDirection(0);
 
-        decrease = binding.getRoot().findViewById(R.id.decrease);
-        increase = binding.getRoot().findViewById(R.id.increase);
+        binding.inBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDirection(0);
+            }
+        });
+        binding.outBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDirection(1);
+            }
+        });
+
+        binding.budgetMonthText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMonthYearPicker();
+            }
+        });
+
+        binding.budgetYearText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                showMonthYearPicker();
+            }
+        });
+
         // Set up click listeners
         binding.budgetGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,13 +167,94 @@ public class StatisticsFragment extends Fragment {
                 changeMonthView(1);
             }
         });
-        prepareWalletData(binding.getRoot());
+//        prepareWalletData(binding.getRoot());
         prepareTransactionData(binding.getRoot());
 
-        // Return the root view of the binding object
+        chart = binding.chart1;
+        int chartBackground = ContextCompat.getColor(requireContext(), R.color.statistic_background);
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+        chart.setExtraOffsets(5, 10, 5, 5);
+
+        chart.setDragDecelerationFrictionCoef(0.95f);
+
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(chartBackground);
+
+        chart.setTransparentCircleColor(chartBackground);
+        chart.setTransparentCircleAlpha(110);
+
+        chart.setHoleRadius(58f);
+        chart.setTransparentCircleRadius(61f);
+
+        chart.setDrawCenterText(true);
+
+        chart.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        chart.setRotationEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+
+        // chart.setUnit(" €");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+        chart.setOnChartValueSelectedListener(this);
+
+
+        prepareDataChart(4, 100);
+
+        chart.animateY(1400, Easing.EaseInOutQuad);
+        // chart.spin(2000, 0, 360);
+
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+        // entry label styling
+        chart.setEntryLabelColor(chartBackground);
+        chart.setEntryLabelTextSize(12f);
         return binding.getRoot();
     }
 
+    public void selectDirection(int id){
+        switch (id) {
+            case 1:
+//                outcome
+                direction = 1;
+                binding.outBtn.setSelected(true);
+                binding.inBtn.setSelected(false);
+                break;
+            default:
+//                income
+                direction = 0;
+                binding.outBtn.setSelected(false);
+                binding.inBtn.setSelected(true);
+                break;
+        }
+        getAndShowTransaction(requireContext(), binding.getRoot(), currentMonth, currentYear);
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+        if (e == null)
+            return;
+        Log.i("VAL SELECTED",
+                "Value: " + e.getY() + ", index: " + h.getX()
+                        + ", DataSet index: " + h.getDataSetIndex());
+    }
+    
+    @Override
+    public void onNothingSelected() {
+        Log.i("PieChart", "nothing selected");
+    }
+    
     public StatisticsFragment() {
     }
 
@@ -114,29 +274,6 @@ public class StatisticsFragment extends Fragment {
 //
 //        return view;
 //    }
-
-
-    private void prepareWalletData(View rootView) {
-        try {
-            Context context = requireContext();
-            db = MoneyDb.getDatabase(context);
-            walletsList = new ArrayList<>();
-            hnHandler = new Handler(Looper.getMainLooper());
-            MoneyDb.databaseWriteExecutor.execute(() -> {
-                walletsList = (ArrayList<Wallet>) db.walletDao().getWallets();
-                Double amount = 0.0;
-                for (Wallet w : walletsList) {
-
-                    amount += w.getAmount();
-                }
-
-                balance.setText(amount.toString() + " VND");
-
-            });
-        } catch (Exception ex) {
-            Log.e("Get all wallet: ", ex.getMessage());
-        }
-    }
 
     private void prepareTransactionData(View rootView) {
         try {
@@ -172,6 +309,20 @@ public class StatisticsFragment extends Fragment {
         yearTitle.setText(String.valueOf(currentYear));
     }
 
+    private void showMonthYearPicker() {
+        MonthYearPickerDialog dialog = MonthYearPickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                binding.budgetMonthText.setText(months[month]);
+                binding.budgetYearText.setText(String.valueOf(year));
+                currentMonth = month;
+                currentYear = year;
+                getAndShowTransaction(requireContext(), binding.getRoot(), currentMonth, currentYear);
+            }
+        });
+        dialog.show(getFragmentManager(), "MonthYearPickerDialog");
+    }
+
 
     public Long[] getStartEndOfMonth(int month, int year) {
         Calendar calendar = Calendar.getInstance();
@@ -192,42 +343,16 @@ public class StatisticsFragment extends Fragment {
 
     public void getAndShowTransaction(Context context, View rootView, int month, int year) {
         Long[] timestamp = getStartEndOfMonth(month-1, year);
-        transactionsList = (ArrayList<Transaction>) db.transactionDao().getTransactionsByMonth(timestamp[0], timestamp[1]);
+        db = MoneyDb.getDatabase(context);
+        List<Integer> daysList = db.transactionDao().getDaysByMonth(timestamp[0], timestamp[1], direction);
+        while (daysList.contains(0))
+            daysList.remove((Integer) 0);
+
         recyclerView.setAdapter(null);
-        list.clear();
-
-        Double increaseAmount = 0.0;
-        Double decreaseAmount = 0.0;
-
-        if(transactionsList.size()==0){
-            increase.setText("+ 0.0");
-            decrease.setText("- 0.0");
-        }
-
-        for (Transaction e : transactionsList
-        ) {
-
-            if(e.getAmount()>0.0){
-                increaseAmount += e.getAmount();
-            }
-            else{
-                decreaseAmount += e.getAmount();
-            }
-            increase.setText("+ " + increaseAmount.toString());
-            decrease.setText("- " + decreaseAmount.toString());
-
-            if (!list.contains(e.getTime())) {
-                list.add(e.getTime());
-            }
-
-
-            budgetAdapter = new BudgetAdapter( fragmentManager,context, list);
-
-            recyclerView = rootView.findViewById(R.id.statitics_recycler_view);
-            recyclerView.setAdapter(budgetAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        }
-        ;
+        statisticAdapter = new StatisticAdapter( fragmentManager,context, daysList, month, year, direction);
+        recyclerView = rootView.findViewById(R.id.statitics_recycler_view);
+        recyclerView.setAdapter(statisticAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
     }
 
 }

@@ -53,7 +53,11 @@ public class LimitAdapter extends RecyclerView.Adapter<LimitAdapter.MyViewHolder
         holder.progress.setProgress(limit.getProgress());
 
         if (limit.getProgress() > 90){
-            holder.progress.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.exceed_limit_progressbar));
+            if ( limit.getDirection() == 1)
+                holder.progress.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.exceed_limit_progressbar));
+            else
+                holder.progress.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.custom_progress_bar));
+
         }
         if (limit.getDirection() == 0){
             // 0 for income, 1 for outcome

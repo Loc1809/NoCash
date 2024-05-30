@@ -54,4 +54,20 @@ public class Common {
         return new Long[] {startOfMonth, endOfMonth};
     }
 
+    public static Long[] getStartEndOfDay(int day, int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        long startOfDay = calendar.getTimeInMillis();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        long endOfDay = calendar.getTimeInMillis();
+        return new Long[] {startOfDay, endOfDay};
+    }
+
 }

@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+              android:id="@+id/cate_container"
+    android:layout_height="35dp"
+    android:layout_margin="5dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageView
+                android:layout_width="50dp"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/baseline_wallet_24"
+                android:id="@+id/cateIcon"/>
+
+        <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/category_name"
+                android:text="category"
+
+                android:gravity="center"/>
+
+        <TextView
+                android:textStyle="bold"
+                android:id="@+id/transaction"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="190.000.00 VND"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:gravity="center | end"/>
+    </LinearLayout>
+</LinearLayout>
