@@ -23,6 +23,9 @@ public interface TransactionDao {
     @Query("SELECT * FROM trans WHERE time BETWEEN (:start) AND (:end) ORDER BY time")
     List<Transaction> getTransactionsByMonth(long start, long end);
 
+    @Query("SELECT * FROM trans WHERE category = :category AND time BETWEEN (:start) AND (:end) ORDER BY time")
+    List<Transaction> getTransactionsByMonthCategory(long start, long end, String category);
+
     @Query("SELECT * FROM trans WHERE category = :cate AND time BETWEEN (:start) AND (:end)")
     List<Transaction> getTransactionsByMonthAndCate(long start, long end, String cate);
 

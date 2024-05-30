@@ -13,6 +13,8 @@ import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.model.Category;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,6 +70,14 @@ public class Common {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         long endOfDay = calendar.getTimeInMillis();
         return new Long[] {startOfDay, endOfDay};
+    }
+
+    public static String formatCurrency(String input) {
+        long amount = Long.parseLong(input);
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.GERMANY);
+        symbols.setGroupingSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
+        return formatter.format(amount);
     }
 
 }

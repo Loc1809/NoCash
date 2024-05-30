@@ -18,6 +18,7 @@ import com.org.cash.model.Limit;
 import com.org.cash.model.LimitDisplay;
 import com.org.cash.model.Transaction;
 import com.org.cash.ui.home.TransactionAdapter;
+import com.org.cash.utils.Common;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class LimitAdapter extends RecyclerView.Adapter<LimitAdapter.MyViewHolder
         LimitDisplay limit = arrayList.get(position);
         holder.icon.setImageResource(limit.getIcon());
         holder.title.setText(limit.getCategory());
-        holder.amount.setText(String.valueOf(limit.getLimitAmount()));
+        holder.amount.setText(Common.formatCurrency(String.valueOf((long) limit.getLimitAmount())) + " đ");
         holder.detail.setText(String.valueOf(limit.getDetails()));
         holder.progress.setProgress(limit.getProgress());
 
@@ -57,11 +58,10 @@ public class LimitAdapter extends RecyclerView.Adapter<LimitAdapter.MyViewHolder
                 holder.progress.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.exceed_limit_progressbar));
             else
                 holder.progress.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.custom_progress_bar));
-
         }
         if (limit.getDirection() == 0){
             // 0 for income, 1 for outcome
-            holder.amount.setTextColor(Color.GREEN);
+            holder.amount.setTextColor(Color.parseColor("#009688"));
         } else {
             holder.amount.setTextColor(Color.RED);
         }

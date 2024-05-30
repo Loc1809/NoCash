@@ -24,10 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.org.cash.CustomToast;
 import com.org.cash.R;
+import com.org.cash.StatiticsCategoryDialogFragment;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentBudgetBinding;
 import com.org.cash.model.*;
-import com.org.cash.ui.add_record.AddTransactionFragment;
 import com.org.cash.ui.home.TransactionAdapter;
 import com.org.cash.utils.Common;
 import com.org.cash.utils.MonthYearPickerDialog;
@@ -49,6 +49,7 @@ public class BudgetFragment extends Fragment {
     private int currentMonth, currentYear;
     private double income = 0.0, outcome = 0.0;
     private TextView monthTitle;
+    private LimitDisplay limitDisplayTemp;
     private final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 
@@ -78,7 +79,7 @@ public class BudgetFragment extends Fragment {
             }
         });
 
-                binding.goBack.setOnClickListener(new View.OnClickListener() {
+        binding.goBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 changeMonthView(-1);
@@ -145,24 +146,7 @@ public class BudgetFragment extends Fragment {
         dialog.show(getFragmentManager(), "MonthYearPickerDialog");
     }
 
-    public void showUndoLimit(int position, Limit limit) {
-        try {
-            Snackbar mySnackbar = Snackbar.make(binding.parentTransLayout, "Click to undo limit.", Snackbar.LENGTH_SHORT);
-            mySnackbar.setAction("Undo", v -> {
-                MoneyDb.databaseWriteExecutor.execute(() -> {
-                    db.limitDao().insert(limit);
-                    hnHandler.post(() -> {
-                        limitList.add(position, limit);
-                        limitAdapter.notifyItemInserted(position);
-                    });
-                });
-            });
-            mySnackbar.show();
-        } catch (Exception ex) {
-            Log.e("ShowUndo", ex.getMessage());
-        }
-    }
-
+    @SuppressLint("SetTextI18n")
     private void getAndShowTransaction(Context context, View rootView, int month, int year){
         displayList.clear();
         income = outcome = 0;
@@ -187,28 +171,31 @@ public class BudgetFragment extends Fragment {
                     category.getName(), category.getIcon(), limit.getDirection(),  (int) (100*(sum/limit.getAmount()))));
             }
             hnHandler.post(() -> {
-                binding.txtIncome.setText(String.valueOf(income));
-                binding.txtOutcome.setText(String.valueOf(outcome));
+                binding.txtIncome.setText(Common.formatCurrency(String.valueOf((long)income)) + " đ");
+                binding.txtOutcome.setText(Common.formatCurrency(String.valueOf((long)outcome)) + " đ");
                 limitAdapter = new LimitAdapter(context, displayList, new LimitAdapter.ClickListenner() {
                     @Override
                     public void onItemClick(int position) {
-
+                        Limit item = limitList.get(position);
+                        StatiticsCategoryDialogFragment dialogFragment = new StatiticsCategoryDialogFragment(context, currentMonth,
+                                item.getCategory(), currentYear, item.getId(), (long) item.getAmount(), item.getDirection(), requireActivity());
+                        dialogFragment.show(getFragmentManager(), "MyDialogFragment");
+                        //showAlertDialog(context, "Thông báo", "Đây là nội dung của dialog.", "OK");
                     }
 
                     @Override
                     public void onItemLongClick(int position) {
-//                        Snackbar mySnackbar = Snackbar.make(binding.parentTransLayout, "Are you sure delete this limit?", Snackbar.LENGTH_SHORT);
-//                        mySnackbar.setAction("Confirm", v -> {
-//                            MoneyDb.databaseWriteExecutor.execute(() -> {
-//                                db.limitDao().delete(limitList.get(position));
-//                                hnHandler.post(() -> {
-//                                    Limit deletedLimit = limitList.remove(position);
-//                                    limitAdapter.notifyItemRemoved(position);
-//                                    showUndoLimit(position, deletedLimit);
-//                                });
-//                            });
-//                        });
-//                        mySnackbar.show();
+                        Snackbar mySnackbar = Snackbar.make(binding.fragmentBudget, "Are you sure delete this limit?", Snackbar.LENGTH_SHORT);
+                        mySnackbar.setAction("Confirm", o -> {
+                            showUndoLimit(position, limitList.get(position));
+                            MoneyDb.databaseWriteExecutor.execute(() -> {
+                                db.limitDao().deleteById(limitList.get(position).getId());
+                            });
+                            limitDisplayTemp = displayList.get(position);
+                            displayList.remove(position);
+                            limitAdapter.notifyItemRemoved(position);
+                        });
+                        mySnackbar.show();
                     }
                 });
                 recyclerView = rootView.findViewById(R.id.budget_trans_list);
@@ -218,5 +205,25 @@ public class BudgetFragment extends Fragment {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             });
         });
+    }
+
+    public void showUndoLimit(int position, Limit limit) {
+        try {
+            Snackbar mySnackbar = Snackbar.make(binding.parentTransLayout, "Click to undo limit.", Snackbar.LENGTH_SHORT);
+            mySnackbar.setAction("Undo", v -> {
+                MoneyDb.databaseWriteExecutor.execute(() -> {
+                    db.limitDao().insert(limit);
+                    hnHandler.post(() -> {
+                        limitList.add(position, limit);
+                        displayList.add(position, limitDisplayTemp);
+                        limitAdapter.notifyItemInserted(position);
+                    });
+                });
+
+            });
+            mySnackbar.show();
+        } catch (Exception ex) {
+            Log.e("ShowUndoWallet", ex.getMessage());
+        }
     }
 }

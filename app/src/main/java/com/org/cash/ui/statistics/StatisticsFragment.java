@@ -104,7 +104,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
             for (SumByCategory category : sumByCategories) {
                 values.add(new PieEntry((float) (category.getSum()/sum), category.getCategory()));
             }
-            PieDataSet dataSet = new PieDataSet(values, "Total:" + sum);
+            PieDataSet dataSet = new PieDataSet(values, "Total:" + Common.formatCurrency(String.valueOf((long)sum)));
             dataSet.setSliceSpace(3f);
             dataSet.setSelectionShift(5f);
 

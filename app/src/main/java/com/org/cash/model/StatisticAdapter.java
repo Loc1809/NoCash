@@ -53,7 +53,7 @@ public class StatisticAdapter extends RecyclerView.Adapter<StatisticAdapter.Budg
         if (item == null) {
             return;
         }
-        double sum = 0;
+        Double sum = 0.0;
 
         budgetViewHolder.time.setText(list.get(i) + "-" + ( month + 1 )+ "-" + year);
 
@@ -63,17 +63,17 @@ public class StatisticAdapter extends RecyclerView.Adapter<StatisticAdapter.Budg
 
         for (Transaction e : rawList
         ) {
-            double amount = (e.direction() == 0) ?  e.getAmount() : -e.getAmount();
+            Double amount = (e.direction() == 0) ?  e.getAmount() : -e.getAmount();
             sum += amount;
         }
         if (sum < 0) {
 //            budgetViewHolder.sum.setTextColor(Color.RED);
-            budgetViewHolder.sum.setText(sum + " VND");
+            budgetViewHolder.sum.setText(Common.formatCurrency(String.valueOf(sum.longValue())) + " VND");
         } else if (sum > 0) {
 //            budgetViewHolder.sum.setTextColor(Color.parseColor("#008000"));
-            budgetViewHolder.sum.setText("+" + sum + " VND");
+            budgetViewHolder.sum.setText("+" + Common.formatCurrency(String.valueOf(sum.longValue())) + " VND");
         } else
-            budgetViewHolder.sum.setText(sum + " VND");
+            budgetViewHolder.sum.setText(Common.formatCurrency(String.valueOf(sum.longValue())) + " VND");
         budgetViewHolder.transactionAdapter = new TransactionAdapter(fragmentManager,context,rawList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         budgetViewHolder.transaction.setLayoutManager(linearLayoutManager);

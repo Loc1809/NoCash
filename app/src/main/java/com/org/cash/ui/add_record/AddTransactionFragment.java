@@ -48,7 +48,7 @@ public class AddTransactionFragment extends Fragment  {
     private GridLayout gridLayout;
     private BottomSheetDialog bottomSheetDialog;
     private String mode="limit";
-    private boolean suggestionAdded = false, isDeleting  = false;
+    private boolean suggestionAdded = false, isDeleting  = false, isFormatting = false;
     private Runnable runnable;
 
     @Override
@@ -68,46 +68,6 @@ public class AddTransactionFragment extends Fragment  {
         gridLayout = new GridLayout(requireContext());
         gridLayout = sheetView.findViewById(R.id.iconGrid);
 
-        try {
-            if (requireArguments().getString("category") != null) {
-//                if (requireArguments().getString("mode").equals("trans")){
-                    transId = requireArguments().getInt("id");
-                    binding.editTextAmount.setText(String.valueOf(requireArguments().getDouble("amount")));
-                    binding.editTextCategory.setText(String.valueOf(requireArguments().getString("category")));
-                    binding.editTextCal.setText(String.valueOf(requireArguments().getString("date")));
-                    binding.editTextWallet.setText(String.valueOf(requireArguments().getString("wallet")));
-                    binding.editTextNote.setText(String.valueOf(requireArguments().getString("note")));
-
-//                }
-                binding.cancelButton.setVisibility(View.VISIBLE);
-                binding.optionButton.setText("Delete");
-                selectDirection(requireArguments().getInt("direction"));
-
-                binding.cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-                        navController.navigate(R.id.navigation_home);
-                    }
-                });
-                binding.optionButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Snackbar mySnackbar = Snackbar.make(binding.parentLayout, "Are you sure delete this wallet?", Snackbar.LENGTH_SHORT);
-                        mySnackbar.setAction("Confirm", o -> {
-                            MoneyDb.databaseWriteExecutor.execute(() -> {
-                                db.transactionDao().deleteById(requireArguments().getInt("id"));
-                            });
-                        });
-                        mySnackbar.show();
-                    }
-                });
-            }
-        }
-        catch (Exception e){
-            System.out.println("Add transaction");
-            selectDirection(0);
-        }
 
         binding.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +147,68 @@ public class AddTransactionFragment extends Fragment  {
             }
         });
 
+        try {
+            if (requireArguments().getString("category") != null) {
+                binding.editTextAmount.setText(Common.formatCurrency(String.valueOf((long) requireArguments().getDouble("amount"))));
+                binding.editTextCategory.setText(String.valueOf(requireArguments().getString("category")));
+                binding.editTextCal.setText(String.valueOf(requireArguments().getString("date")));
+                if (!requireArguments().getBoolean("limit")){
+                    transId = requireArguments().getInt("id");
+                    binding.editTextWallet.setText(String.valueOf(requireArguments().getString("wallet")));
+                    binding.editTextNote.setText(String.valueOf(requireArguments().getString("note")));
+                    binding.cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                            navController.navigate(R.id.navigation_home);
+                        }
+                    });
+                    binding.optionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Snackbar mySnackbar = Snackbar.make(binding.parentLayout, "Are you sure delete this trans?", Snackbar.LENGTH_SHORT);
+                            mySnackbar.setAction("Confirm", o -> {
+                                MoneyDb.databaseWriteExecutor.execute(() -> {
+                                    db.transactionDao().deleteById(requireArguments().getInt("id"));
+                                });
+                            });
+                            mySnackbar.show();
+                        }
+                    });
+                } else {
+                    limitId = requireArguments().getInt("id");
+                    binding.cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                            navController.navigate(R.id.navigation_home);
+                        }
+                    });
+                    binding.optionButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Snackbar mySnackbar = Snackbar.make(binding.parentLayout, "Are you sure delete this limit?", Snackbar.LENGTH_SHORT);
+                            mySnackbar.setAction("Confirm", o -> {
+                                MoneyDb.databaseWriteExecutor.execute(() -> {
+                                    db.limitDao().deleteById(requireArguments().getInt("id"));
+                                });
+                            });
+                            mySnackbar.show();
+                        }
+                    });
+                    changeModeTo("limit");
+                }
+                binding.cancelButton.setVisibility(View.VISIBLE);
+                binding.optionButton.setText("Delete");
+                selectDirection(requireArguments().getInt("direction"));
+            }
+        }
+        catch (Exception e){
+            System.out.println("Add transaction");
+            selectDirection(0);
+        }
+
+
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -215,6 +237,17 @@ public class AddTransactionFragment extends Fragment  {
             @Override
             public void afterTextChanged(Editable editable) {
                 hnHandler.postDelayed(runnable, 1500);
+                if (isFormatting) {
+                    return;
+                }
+                isFormatting = true;
+                String input = editable.toString().replaceAll("[^\\d]", "");
+                if (!input.isEmpty()) {
+                    String formatted = Common.formatCurrency(input);
+                    binding.editTextAmount.setText(formatted);
+                    binding.editTextAmount.setSelection(formatted.length());
+                }
+                isFormatting = false;
             }
         });
 
@@ -237,6 +270,8 @@ public class AddTransactionFragment extends Fragment  {
 
             }
         });
+
+
         return binding.getRoot();
     }
 

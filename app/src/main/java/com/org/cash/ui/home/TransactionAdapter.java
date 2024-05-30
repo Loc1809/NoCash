@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
 import com.org.cash.databinding.ItemRecycleTransBinding;
 import com.org.cash.model.Transaction;
+import com.org.cash.utils.Common;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
         Transaction transaction = arrayList.get(position);
         holder.title.setText(transaction.getDesc());
-        holder.amount.setText(String.valueOf(transaction.getAmount()));
+        holder.amount.setText(String.valueOf(Common.formatCurrency(String.valueOf(transaction.getAmount().longValue()))));
     }
 
     @Override

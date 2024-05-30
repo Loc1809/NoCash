@@ -242,7 +242,6 @@ import java.util.List;
                     @Override
                     public void onItemClick(int position) {
                         Transaction current = transactionsList.get(position);
-                        CustomToast.makeText(context, transactionsList.get(position).getDesc(), Toast.LENGTH_SHORT).show();
                         AddTransactionFragment fragment = new AddTransactionFragment();
                         Bundle args = new Bundle();
                         args.putInt("id", current.getId());

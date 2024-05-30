@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
+import com.org.cash.utils.Common;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -52,14 +53,14 @@ public class StatiticsCategoryAdapter extends RecyclerView.Adapter<StatiticsCate
         transactionViewHolder.categoryname.setText(item.getDesc());
         if(item.getAmount()<0){
             transactionViewHolder.transaction.setTextColor(Color.RED);
-            transactionViewHolder.transaction.setText("-" + item.getAmount().toString() + " VND");
+            transactionViewHolder.transaction.setText("-" + Common.formatCurrency(String.valueOf(item.getAmount().longValue())) + " VND");
         }
         else if(item.getAmount() >0){
-            transactionViewHolder.transaction.setTextColor(Color.parseColor("#008000"));
-            transactionViewHolder.transaction.setText("+" + item.getAmount().toString() + " VND");
+            transactionViewHolder.transaction.setTextColor(Color.parseColor("#009688"));
+            transactionViewHolder.transaction.setText("+" + Common.formatCurrency(String.valueOf(item.getAmount().longValue())) + " VND");
         }
         else
-            transactionViewHolder.transaction.setText(item.getAmount().toString() + " VND");
+            transactionViewHolder.transaction.setText(Common.formatCurrency(String.valueOf(item.getAmount().longValue())) + " VND");
     }
 
     @Override

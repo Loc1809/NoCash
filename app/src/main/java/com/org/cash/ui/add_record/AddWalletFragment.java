@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.org.cash.CustomToast;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
-import com.org.cash.databinding.FragmentAddTransactionBinding;
 import com.org.cash.databinding.FragmentAddWalletBinding;
 import com.org.cash.model.Wallet;
 import com.org.cash.utils.Common;
@@ -48,7 +47,7 @@ public class AddWalletFragment extends Fragment {
         try {
             if (requireArguments().getString("name") != null) {
                 walletId = requireArguments().getInt("id");
-                binding.editTextAmount.setText(String.valueOf(requireArguments().getDouble("amount")));
+                binding.editTextAmount.setText(Common.formatCurrency(String.valueOf((long) requireArguments().getDouble("amount"))));
                 binding.editTextName.setText(String.valueOf(requireArguments().getString("name")));
 
                 binding.walletCancelButton.setVisibility(View.VISIBLE);

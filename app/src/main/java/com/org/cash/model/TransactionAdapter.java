@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
 import com.org.cash.StatiticsCategoryDialogFragment;
 import com.org.cash.database.MoneyDb;
+import com.org.cash.utils.Common;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -59,18 +60,18 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         transactionViewHolder.categoryname.setText(item.getCategory());
         if(item.direction() == 1){
             transactionViewHolder.transaction.setTextColor(Color.RED);
-            transactionViewHolder.transaction.setText("-" + item.getAmount().toString() + " VND");
+            transactionViewHolder.transaction.setText("-" + Common.formatCurrency( String.valueOf(item.getAmount().longValue())) + " VND");
         }
         else {
-            transactionViewHolder.transaction.setTextColor(Color.parseColor("#008000"));
-            transactionViewHolder.transaction.setText("+" + item.getAmount().toString() + " VND");
+            transactionViewHolder.transaction.setTextColor(Color.parseColor("#009688"));
+            transactionViewHolder.transaction.setText("+" + Common.formatCurrency(String.valueOf(item.getAmount().longValue())) + " VND");
         }
 
         transactionViewHolder.cateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 long time = item.getTime();
-                StatiticsCategoryDialogFragment dialogFragment = new StatiticsCategoryDialogFragment(context, time, item.getCategory());
+                StatiticsCategoryDialogFragment dialogFragment = new StatiticsCategoryDialogFragment(context, time, item.getCategory(), -1, -1, -1, -1, null);
                 dialogFragment.show(fragmentManager, "MyDialogFragment");
                 //showAlertDialog(context, "Thông báo", "Đây là nội dung của dialog.", "OK");
             }

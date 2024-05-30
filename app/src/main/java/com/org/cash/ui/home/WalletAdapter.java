@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
 import com.org.cash.databinding.ItemRecycleWalletBinding;
 import com.org.cash.model.Wallet;
+import com.org.cash.utils.Common;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class WalletAdapter extends RecyclerView.Adapter<WalletAdapter.MyViewHold
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
         Wallet wallet = arrayList.get(position);
         holder.title.setText(wallet.getName());
-        holder.amount.setText(String.valueOf(wallet.getAmount()));
+        holder.amount.setText(Common.formatCurrency(String.valueOf((int) wallet.getAmount())));
     }
 
     @Override
