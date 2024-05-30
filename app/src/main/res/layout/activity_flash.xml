@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".FlashActivity"
+android:background="@drawable/_78781398_1efebf13_3a83_42a3_a2e3_8859149009b3"
+>
+
+    <ImageView
+            android:layout_width="155dp"
+            android:layout_height="133dp" app:srcCompat="@drawable/piggybank" android:id="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.319"/>
+    <TextView
+            android:text="Money"
+            android:layout_width="148dp"
+            android:layout_height="108dp" android:id="@+id/textView7"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintVertical_bias="0.52" android:textColor="#FFFFFF" android:textSize="48sp"
+            android:textAlignment="viewStart" android:fontFamily="sans-serif-thin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+    <TextView
+            android:text="LUV"
+            android:layout_width="168dp"
+            android:layout_height="130dp" android:id="@+id/textView12"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.88" app:layout_constraintVertical_bias="0.608"
+            android:textSize="60sp" android:textStyle="bold" android:textColor="#03A9F4"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
