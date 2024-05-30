@@ -18,6 +18,6 @@ public class FlashActivity extends AppCompatActivity {
                 startActivities(new Intent[]{intent});
                 finish();
             }
-        },3000);
+        },1000);
     }
 }

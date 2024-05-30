@@ -3,10 +3,15 @@ package com.org.cash.ui.statistics;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -38,8 +43,10 @@ import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentStatisticsBinding;
 import com.org.cash.model.StatisticAdapter;
+import com.org.cash.model.SumByCategory;
 import com.org.cash.model.Transaction;
 import com.org.cash.model.Wallet;
+import com.org.cash.utils.Common;
 import com.org.cash.utils.MonthYearPickerDialog;
 
 import java.util.ArrayList;
@@ -85,28 +92,37 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         chart.setLayoutParams(rlParams);
     }
 
-    private void prepareDataChart(int count, float range) {
+    private void prepareDataChart() {
         db = MoneyDb.getDatabase(requireContext());
+        Long[] timestamps = Common.getStartEndOfMonth(currentMonth,currentYear);
+        double sum = db.transactionDao().getSumByMonth(timestamps[0], timestamps[1], direction);
+        List<SumByCategory> sumByCategories = db.transactionDao().getSumByMonthDirection(timestamps[0], timestamps[1], direction);
         ArrayList<PieEntry> values = new ArrayList<>();
 
-        for (int i = 0; i < count; i++) {
-            values.add(new PieEntry((float) ((Math.random() * range) + range / 5), "test"));
-        }
+        hnHandler = new Handler(Looper.getMainLooper());
+        hnHandler.post(()->{
+            for (SumByCategory category : sumByCategories) {
+                values.add(new PieEntry((float) (category.getSum()/sum), category.getCategory()));
+            }
+            PieDataSet dataSet = new PieDataSet(values, "Total:" + sum);
+            dataSet.setSliceSpace(3f);
+            dataSet.setSelectionShift(5f);
 
-        PieDataSet dataSet = new PieDataSet(values, "Election Results");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
+            dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+            //dataSet.setSelectionShift(0f);
 
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        //dataSet.setSelectionShift(0f);
-
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-        chart.setData(data);
-
-        chart.invalidate();
+            dataSet.setDrawValues(false);
+            dataSet.setValueTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            dataSet.setValueTextSize(14f);
+            PieData data = new PieData(dataSet);
+            data.setValueFormatter(new PercentFormatter());
+            data.setValueTextSize(0f);
+            data.setValueTextColor(Color.TRANSPARENT);// yourDesiredTextSize is the size you want
+            chart.setEntryLabelColor(Color.TRANSPARENT);
+            chart.setEntryLabelTextSize(0f);
+            chart.setData(data);
+            chart.invalidate();
+        });
     }
 
     @Override
@@ -124,7 +140,6 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         // Access views through the binding object
         monthTitle = binding.getRoot().findViewById(R.id.budget_month_text);
         yearTitle = binding.getRoot().findViewById(R.id.budget_year_text);
-        selectDirection(0);
 
         binding.inBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +186,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         prepareTransactionData(binding.getRoot());
 
         chart = binding.chart1;
+        selectDirection(0);
         int chartBackground = ContextCompat.getColor(requireContext(), R.color.statistic_background);
         chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
@@ -200,9 +216,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         // add a selection listener
         chart.setOnChartValueSelectedListener(this);
 
-
-        prepareDataChart(4, 100);
-
+//        prepareDataChart();
         chart.animateY(1400, Easing.EaseInOutQuad);
         // chart.spin(2000, 0, 360);
 
@@ -237,22 +251,33 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
                 break;
         }
         getAndShowTransaction(requireContext(), binding.getRoot(), currentMonth, currentYear);
-
     }
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-
         if (e == null)
             return;
-        Log.i("VAL SELECTED",
-                "Value: " + e.getY() + ", index: " + h.getX()
-                        + ", DataSet index: " + h.getDataSetIndex());
+
+        PieEntry pe = (PieEntry) e;
+        String category = pe.getLabel();
+        chart.setCenterText(generateCenterSpannableText(category));
+        Log.i("VAL SELECTED", "Category: " + category + ", Value: " + pe.getValue());
     }
     
     @Override
     public void onNothingSelected() {
         Log.i("PieChart", "nothing selected");
+    }
+
+    private SpannableString generateCenterSpannableText(String category) {
+        SpannableString s = new SpannableString(category);
+        s.setSpan(new RelativeSizeSpan(1.2f), 0, category.length(), 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 0, category.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, category.length(), 0);
+        s.setSpan(new RelativeSizeSpan(1.2f), 0, category.length(), 0);
+        s.setSpan(new StyleSpan(Typeface.ITALIC), 0, category.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), 0, category.length(), 0);
+        return s;
     }
     
     public StatisticsFragment() {
@@ -342,6 +367,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
     }
 
     public void getAndShowTransaction(Context context, View rootView, int month, int year) {
+        prepareDataChart();
         Long[] timestamp = getStartEndOfMonth(month-1, year);
         db = MoneyDb.getDatabase(context);
         List<Integer> daysList = db.transactionDao().getDaysByMonth(timestamp[0], timestamp[1], direction);

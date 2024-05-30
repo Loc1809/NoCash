@@ -29,6 +29,9 @@ public interface TransactionDao {
     @Query("SELECT SUM(amount) FROM trans WHERE category = :cate AND time BETWEEN (:start) AND (:end)")
     Double getSumByMonthAndCate(long start, long end, String cate);
 
+    @Query("SELECT SUM(amount) FROM trans WHERE direction = :direction AND time BETWEEN (:start) AND (:end)")
+    Double getSumByMonth(long start, long end, int direction);
+
     @Query("SELECT SUM(amount) as sum, category FROM trans WHERE direction = :direction AND time BETWEEN (:start) AND (:end) GROUP BY category")
     List<SumByCategory> getSumByMonthDirection(long start, long end, int direction);
 
