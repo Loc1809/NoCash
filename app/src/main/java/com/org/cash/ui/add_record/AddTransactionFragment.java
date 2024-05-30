@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,12 +42,14 @@ public class AddTransactionFragment extends Fragment  {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FragmentAddTransactionBinding binding;
     private MoneyDb db;
-    private Handler hnHandler;
+    private Handler hnHandler = new Handler();
     private Button button;
     private int mYear, mMonth, mDay, datetime, transId = 0, limitId = 0, direction;
     private GridLayout gridLayout;
     private BottomSheetDialog bottomSheetDialog;
     private String mode="limit";
+    private boolean suggestionAdded = false, isDeleting  = false;
+    private Runnable runnable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class AddTransactionFragment extends Fragment  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddTransactionBinding.inflate(inflater, container, false);
-
+        final String[] suggestions = new String[2];
         bottomSheetDialog = new BottomSheetDialog(requireContext());
         View sheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
         bottomSheetDialog.setContentView(sheetView);
@@ -182,7 +187,65 @@ public class AddTransactionFragment extends Fragment  {
             }
         });
 
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!suggestionAdded && !isDeleting) {
+                    String inputText = binding.editTextAmount.getText().toString();
+                    suggestions[0] = inputText + "000"; // Gợi ý thêm 3 số 0 vào cuối
+                    suggestions[1] = "..."; // Gợi ý thêm 3 số 0 vào cuối
+                    showSuggestions(suggestions);
+                }
+            }
+        };
+
+        binding.editTextAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                isDeleting = after < count || start == after;
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                hnHandler.removeCallbacks(runnable);
+                suggestionAdded = false;
+                binding.suggestionSpinner.setVisibility(View.GONE);
+            }
+
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                hnHandler.postDelayed(runnable, 1500);
+            }
+        });
+
+        binding.suggestionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != AdapterView.INVALID_POSITION) {
+                    String selectedItem = (String) parent.getItemAtPosition(position);
+                    if (!suggestionAdded && selectedItem.equals(suggestions[0])) {
+                        binding.editTextAmount.setText(selectedItem);
+                        binding.editTextAmount.setSelection(selectedItem.length()); // Đặt con trỏ vào cuối
+                        //binding.suggestionSpinner.setVisibility(View.GONE);
+                        suggestionAdded = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         return binding.getRoot();
+    }
+
+    private void showSuggestions(String[] suggestions) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, suggestions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.suggestionSpinner.setAdapter(adapter);
+        binding.suggestionSpinner.setVisibility(View.VISIBLE);
+        binding.suggestionSpinner.performClick();
     }
 
     private void selectWallet(){

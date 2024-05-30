@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -27,9 +31,10 @@ import com.org.cash.utils.Common;
 public class AddWalletFragment extends Fragment {
     private FragmentAddWalletBinding binding;
     private MoneyDb db;
-    private Handler hnHandler;
+    private Handler hnHandler = new Handler();
     private int walletId;
-
+    private boolean suggestionAdded = false, isDeleting  = false;
+    private Runnable runnable;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,7 @@ public class AddWalletFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddWalletBinding.inflate(inflater, container, false);
+        final String[] suggestions = new String[2];
         try {
             if (requireArguments().getString("name") != null) {
                 walletId = requireArguments().getInt("id");
@@ -87,7 +93,64 @@ public class AddWalletFragment extends Fragment {
                 onClickEvent();
             }
         });
-        return view;
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!suggestionAdded && !isDeleting) {
+                    String inputText = binding.editTextAmount.getText().toString();
+                    suggestions[0] = inputText + "000"; // Gợi ý thêm 3 số 0 vào cuối
+                    suggestions[1] = "..."; // Gợi ý thêm 3 số 0 vào cuối
+                    showSuggestions(suggestions);
+                }
+            }
+        };
+
+        binding.editTextAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                isDeleting = after < count || start == after;
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                hnHandler.removeCallbacks(runnable);
+                suggestionAdded = false;
+                binding.suggestionSpinner.setVisibility(View.GONE);
+            }
+
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                hnHandler.postDelayed(runnable, 1500);
+            }
+        });
+
+        binding.suggestionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != AdapterView.INVALID_POSITION) {
+                    String selectedItem = (String) parent.getItemAtPosition(position);
+                    if (!suggestionAdded && selectedItem.equals(suggestions[0])) {
+                        binding.editTextAmount.setText(selectedItem);
+                        binding.editTextAmount.setSelection(selectedItem.length());
+                        suggestionAdded = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        return binding.getRoot();
+    }
+
+    private void showSuggestions(String[] suggestions) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, suggestions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.suggestionSpinner.setAdapter(adapter);
+        binding.suggestionSpinner.setVisibility(View.VISIBLE);
+        binding.suggestionSpinner.performClick();
     }
 
     @Override
