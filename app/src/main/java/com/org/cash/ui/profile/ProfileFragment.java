@@ -1,6 +1,7 @@
 package com.org.cash.ui.profile;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -15,8 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.org.cash.API.ApiService;
+import com.org.cash.API.RetroFitConnection;
 import com.org.cash.API.TokenManager;
 import com.org.cash.CustomToast;
+import com.org.cash.LoginActivity;
+import com.org.cash.MainActivity;
 import com.org.cash.R;
 
 import com.google.android.material.navigation.NavigationView;
@@ -33,11 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ProfileFragment extends Fragment {
 
-       Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    ApiService apiService = retrofit.create(ApiService.class);
+    ApiService apiService = RetroFitConnection.getInstance().getRetrofit().create(ApiService.class);
 
     User user;
 
@@ -53,6 +53,9 @@ public class ProfileFragment extends Fragment {
     private EditText editText_reType_pwd;
     private EditText editText_new_pwd;
     private Button save_pwd;
+
+    private Button logout;
+
 
 //    private EditText editText_Name;
 //    private EditText editText_Email;
@@ -124,6 +127,16 @@ public class ProfileFragment extends Fragment {
         this.editText_Email = view.findViewById(R.id.editText_Email);
         this.editText_Phone = view.findViewById(R.id.editText_Phone);
         this.save = view.findViewById(R.id.button2);
+        this.logout = view.findViewById(R.id.button3);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TokenManager.getInstance().setToken(null);
+                Intent intent = new Intent(view.getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 user.setName(String.valueOf(editText_Name.getText()));
@@ -214,8 +227,8 @@ public class ProfileFragment extends Fragment {
                     editText_Name.setText(resource.getUsername());
                     editText_Email.setText(resource.getEmail());
                     editText_Phone.setText(resource.getPhoneNumber());
+                } catch (Exception e) {
                 }
-                catch (Exception e){}
             }
 
             @Override

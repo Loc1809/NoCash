@@ -12,6 +12,7 @@ import android.os.Bundle;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.org.cash.API.ApiService;
+import com.org.cash.API.RetroFitConnection;
 import com.org.cash.API.TokenManager;
 import com.org.cash.model.Login;
 import com.org.cash.model.TokenResponse;
@@ -33,11 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    ApiService apiService = retrofit.create(ApiService.class);
+    ApiService apiService = RetroFitConnection.getInstance().getRetrofit().create(ApiService.class);
     NavigationView backToRegisterNavigationView;
     EditText mail;
     EditText password;
@@ -49,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         this.mail = findViewById(R.id.editTextEmail_login);
         this.password = findViewById(R.id.editTextPassword_login);
         this.login = findViewById(R.id.login);
-        performLogin(null, null);
+        //performLogin(null, null);
 
 
         login.setOnClickListener(view -> {
@@ -93,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 TokenResponse resource = response.body();
 
                     if(simulateLoginAPI(resource)) {
+                        showToast("Login success");
                         navigateToMainActivity();
                     }
                     else {
@@ -112,7 +110,10 @@ public class LoginActivity extends AppCompatActivity {
     private boolean simulateLoginAPI(TokenResponse resource){
         // Simulate successful login for demonstration
 
-        if(resource==null) return false;
+        if(resource==null){
+            Log.e("gg","eror");
+            return false;
+        }
         else{
 
             //Log.e("ProfileFragment", "Error: "+ resource.token);
