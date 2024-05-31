@@ -394,17 +394,17 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         prepareDataChart();
         Long[] timestamp = getStartEndOfMonth(month-1, year);
         db = MoneyDb.getDatabase(context);
+        hnHandler = new Handler(Looper.getMainLooper());
         List<Integer> daysList = db.transactionDao().getDaysByMonth(timestamp[0], timestamp[1], direction);
-        while (daysList.contains(0))
-            daysList.remove((Integer) 0);
-        if (daysList.isEmpty()){
-            CustomToast.makeText(requireContext(), "No transactions", CustomToast.LENGTH_SHORT, 1).show();
-        }
-        recyclerView.setAdapter(null);
-        statisticAdapter = new StatisticAdapter( fragmentManager,context, daysList, month, year, direction);
-        recyclerView = rootView.findViewById(R.id.statitics_recycler_view);
-        recyclerView.setAdapter(statisticAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        hnHandler.post(() -> {
+            while (daysList.contains(0))
+                daysList.remove((Integer) 0);
+            recyclerView.setAdapter(null);
+            statisticAdapter = new StatisticAdapter( fragmentManager,context, daysList, month, year, direction);
+            recyclerView = rootView.findViewById(R.id.statitics_recycler_view);
+            recyclerView.setAdapter(statisticAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        });
     }
 
 }

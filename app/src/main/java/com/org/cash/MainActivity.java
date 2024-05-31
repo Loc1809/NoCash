@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 1) {
                      for (int i = 0; i < 70; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans" + i, "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0,
+                                 getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans " + i, "Category "+rand.nextInt(20), "Wallet "+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -79,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 70; i++) {
-                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans" + i, "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
+                         Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0,
+                                 getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans " + i, "Category "+rand.nextInt(20), "Wallet "+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
                          });
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 3) {
                      for (int i = 0; i < 10; i++) {
-                         Wallet newWallet = new Wallet( rand.nextInt(1000), "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
+                         Wallet newWallet = new Wallet( rand.nextInt(1000), "Wallet "+rand.nextInt(20), rand.nextInt(10)*10000.0);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.walletDao().insert(newWallet);
                          });
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                         Wallet newWallet = new Wallet(rand.nextInt(1000), "Wallet"+rand.nextInt(20), rand.nextInt(10)*10000.0);
+                         Wallet newWallet = new Wallet(rand.nextInt(1000), "Wallet "+rand.nextInt(20), rand.nextInt(10)*10000.0);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.walletDao().insert(newWallet);
                          });
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
              try {
                  if (list.size() < 3) {
                      for (int i = 0; i < 25; i++) {
-                         Category newCategory = new Category(rand.nextInt(1000), "Category"+i, rand.nextInt(2), R.drawable.baseline_attach_money_24);
+                         Category newCategory = new Category(rand.nextInt(1000), "Category "+i, rand.nextInt(2), R.drawable.baseline_attach_money_24);
                          list.add(newCategory);
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                               db.categoryDao().insert(newCategory);
@@ -150,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
              }
              catch (Exception e){
                  for (int i = 0; i < 10; i++) {
-                     Category newCategory = new Category( rand.nextInt(1000), "Category"+rand.nextInt(20), rand.nextInt(2), R.drawable.baseline_attach_money_24);
+                     Category newCategory = new Category( rand.nextInt(1000), "Category "+rand.nextInt(20), rand.nextInt(2), R.drawable.baseline_attach_money_24);
                      MoneyDb.databaseWriteExecutor.execute(() -> {
                          db.categoryDao().insert(newCategory);
                      });
