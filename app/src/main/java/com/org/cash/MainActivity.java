@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -193,12 +194,15 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.navigation_profile);
                 } else {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
                 }
                 return false;
             } else {
+
                 return NavigationUI.onNavDestinationSelected(item, navController)
                         || super.onOptionsItemSelected(item);
             }
+            Log.e("gg","eror");
             return false;
         });
 

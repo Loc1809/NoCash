@@ -70,13 +70,20 @@ public class RegisterActivity extends AppCompatActivity {
         backToInstructNavigationView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.back_to_instruct_item) {
-                //TODO intend to instruct
+                navigateToMainActivity();
+                return true;
             }
             return false;
         });
 
-
     }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish(); // Finish the LoginActivity to prevent returning back to it
+    }
+
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
