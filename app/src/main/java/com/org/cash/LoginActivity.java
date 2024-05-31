@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 TokenResponse resource = response.body();
 
                     if(simulateLoginAPI(resource)) {
-                        showToast("Login success");
+                        showToast("Login successful");
                         navigateToMainActivity();
                     }
                     else {
@@ -111,16 +111,9 @@ public class LoginActivity extends AppCompatActivity {
         // Simulate successful login for demonstration
 
         if(resource==null){
-            Log.e("gg","eror");
             return false;
         }
         else{
-
-            //Log.e("ProfileFragment", "Error: "+ resource.token);
-//            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.putString("token",resource.token);
-//            editor.apply();
             TokenManager.getInstance().setToken(resource.token);
             return true;
         }
