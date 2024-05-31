@@ -2,6 +2,7 @@ package com.org.cash;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,8 +11,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.material.navigation.NavigationView;
+import com.org.cash.API.ApiService;
+import com.org.cash.API.RetroFitConnection;
+import com.org.cash.model.TokenResponse;
+import com.org.cash.model.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class RegisterActivity extends AppCompatActivity {
+    ApiService apiService = RetroFitConnection.getInstance().getRetrofit().create(ApiService.class);
+
     NavigationView backToInstructNavigationView;
     EditText name;
     EditText mail;
@@ -52,8 +64,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                 // Call API or perform desired action based on confirmation
                 if (isConfirmed) {
+                    performRegister(inputName, inputMail, inputPassword);
                     //TODO Call your API here with loginInfo
                     //TODO callAPI(loginInfo);
+                } else {
+                    showToast("Please confirm before registering");
                 }
             }
         });
@@ -84,14 +99,42 @@ public class RegisterActivity extends AppCompatActivity {
         finish(); // Finish the LoginActivity to prevent returning back to it
     }
 
+    private void navigateToLoginActivity() {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish(); // Finish the LoginActivity to prevent returning back to it
+    }
+
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    // Simulate API call
-    //private void callAPI(Login loginInfo) {
-        // Implement your API call logic here
-    //}
+    private void performRegister(String name, String email, String password) {
+        User user = new User();
+        user.setUsername(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        AtomicReference<Call<User>> call = new AtomicReference<>(apiService.signIn(user));
+        call.get().enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User resource = response.body();
+                if (resource != null) {
+                    showToast("Register successful, please login");
+                    navigateToLoginActivity();
+                } else {
+                    showToast("Register failed: duplicated account");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast("Register failed: duplicated account");
+                call.cancel();
+            }
+        });
+    }
 
 }
