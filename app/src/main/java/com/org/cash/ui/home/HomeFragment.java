@@ -1,5 +1,6 @@
 package com.org.cash.ui.home;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -30,6 +32,7 @@ import com.org.cash.model.Wallet;
 import com.org.cash.ui.add_record.AddTransactionFragment;
 import com.org.cash.ui.add_record.AddWalletFragment;
 import com.org.cash.utils.Common;
+import com.org.cash.utils.MonthYearPickerDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -134,6 +137,21 @@ public class HomeFragment extends Fragment {
                 changeMonthView(1);
             }
         });
+
+        binding.yearText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMonthYearPicker();
+            }
+        });
+
+        binding.monthText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMonthYearPicker();
+            }
+        });
+
         prepareWalletData(binding.getRoot());
         prepareTransactionData(binding.getRoot());
 
@@ -152,7 +170,22 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void showMonthYearPicker() {
+        MonthYearPickerDialog dialog = MonthYearPickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                currentYear = year;
+                currentMonth = month;
+                binding.monthText.setText(months[month]);
+                binding.yearText.setText(String.valueOf(year));
+                getAndShowTransaction(requireContext(), binding.getRoot(), currentMonth, currentYear);
+            }
+        });
+        dialog.show(getFragmentManager(), "MonthYearPickerDialog");
+    }
+
     public void calBalance(){
+        headerAmount = 0;
         MoneyDb.databaseWriteExecutor.execute(() -> {
             walletsList = (ArrayList<Wallet>) db.walletDao().getWallets();
             for (Wallet w : walletsList) {
@@ -162,6 +195,7 @@ public class HomeFragment extends Fragment {
 
     private void prepareWalletData(View rootView) {
         try {
+            headerAmount = 0;
             Context context = requireContext();
             db = MoneyDb.getDatabase(context);
             walletsList = new ArrayList<>();
@@ -171,7 +205,7 @@ public class HomeFragment extends Fragment {
                 for (Wallet w : walletsList) {
                     headerAmount += w.getAmount();
                 }
-                binding.homeBalanceAmount.setText(Common.formatCurrency(String.valueOf(headerAmount)) + " đ");
+                binding.homeBalanceAmount.setText("...");
                 hnHandler.post(() -> {
                     walletAdapter = new WalletAdapter(context, walletsList, new WalletAdapter.ClickListenner() {
                         @Override

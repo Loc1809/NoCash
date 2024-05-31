@@ -79,7 +79,7 @@
                         android:textColor="@color/red"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:text="20 đ"
+                        android:text="0 đ"
                         android:layout_gravity="center"
                         android:gravity="right"
                 />
@@ -112,7 +112,7 @@
                                         android:textColor="@color/mdtp_red"
                                         android:textSize="20sp"
                                         android:textStyle="bold"
-                                        android:text="20 đ"
+                                        android:text="0 đ"
                                         android:layout_gravity="center"
                                         android:gravity="right"
                                 />

@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 public class Wallet {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
-    int id;
+    Integer id;
 
     @ColumnInfo(name="name")
     String name;
@@ -33,7 +33,7 @@ public class Wallet {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

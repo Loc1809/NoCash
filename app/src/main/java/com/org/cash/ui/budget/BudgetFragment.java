@@ -153,6 +153,10 @@ public class BudgetFragment extends Fragment {
         Long[] timestamp = Common.getStartEndOfMonth(month, year);
         MoneyDb.databaseWriteExecutor.execute(() -> {
             limitList = (ArrayList<Limit>) db.limitDao().getLimitsByMonth(timestamp[0], timestamp[1]);
+            hnHandler.post(()->{
+                if (limitList.isEmpty())
+                    CustomToast.makeText(requireContext(), "No transactions", CustomToast.LENGTH_SHORT, 1).show();
+            });
             for (Limit limit : limitList) {
                 double sum = 0.0;
                 try{

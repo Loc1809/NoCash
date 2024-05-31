@@ -39,6 +39,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.org.cash.CustomToast;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentStatisticsBinding;
@@ -94,21 +95,44 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
 
     private void prepareDataChart() {
         db = MoneyDb.getDatabase(requireContext());
-        Long[] timestamps = Common.getStartEndOfMonth(currentMonth,currentYear);
-        double sum = db.transactionDao().getSumByMonth(timestamps[0], timestamps[1], direction);
+        Long[] timestamps = Common.getStartEndOfMonth(currentMonth, currentYear);
+        double sum = 0.0;
+        try{
+            sum = db.transactionDao().getSumByMonth(timestamps[0], timestamps[1], direction);
+        } catch (Exception ignored){
+        }
         List<SumByCategory> sumByCategories = db.transactionDao().getSumByMonthDirection(timestamps[0], timestamps[1], direction);
         ArrayList<PieEntry> values = new ArrayList<>();
 
         hnHandler = new Handler(Looper.getMainLooper());
+        double finalSum = sum;
         hnHandler.post(()->{
             for (SumByCategory category : sumByCategories) {
-                values.add(new PieEntry((float) (category.getSum()/sum), category.getCategory()));
+                values.add(new PieEntry((float) (category.getSum()/ finalSum), category.getCategory()));
             }
-            PieDataSet dataSet = new PieDataSet(values, "Total:" + Common.formatCurrency(String.valueOf((long)sum)));
+            PieDataSet dataSet = new PieDataSet(values, "Total:" + Common.formatCurrency(String.valueOf((long) finalSum)));
             dataSet.setSliceSpace(3f);
             dataSet.setSelectionShift(5f);
+            int[] colors = new int[]{
+                Color.rgb(64, 89, 128),
+                Color.rgb(149, 165, 124),
+                Color.rgb(217, 184, 162),
+                Color.rgb(191, 134, 134),
+                Color.rgb(179, 48, 80),
 
-            dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+                Color.rgb(255, 182, 193),
+                Color.rgb(255, 228, 196),
+                Color.rgb(135, 206, 250),
+                Color.rgb(216, 191, 216),
+                Color.rgb(173, 216, 230),
+                Color.rgb(240, 230, 140),
+                Color.rgb(221, 160, 221),
+                Color.rgb(255, 218, 185),
+                Color.rgb(176, 224, 230),
+                Color.rgb(152, 251, 152)
+            };
+
+            dataSet.setColors(colors);
             //dataSet.setSelectionShift(0f);
 
             dataSet.setDrawValues(false);
@@ -373,7 +397,9 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         List<Integer> daysList = db.transactionDao().getDaysByMonth(timestamp[0], timestamp[1], direction);
         while (daysList.contains(0))
             daysList.remove((Integer) 0);
-
+        if (daysList.isEmpty()){
+            CustomToast.makeText(requireContext(), "No transactions", CustomToast.LENGTH_SHORT, 1).show();
+        }
         recyclerView.setAdapter(null);
         statisticAdapter = new StatisticAdapter( fragmentManager,context, daysList, month, year, direction);
         recyclerView = rootView.findViewById(R.id.statitics_recycler_view);
