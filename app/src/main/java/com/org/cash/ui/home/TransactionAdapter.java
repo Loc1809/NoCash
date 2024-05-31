@@ -1,13 +1,17 @@
 package com.org.cash.ui.home;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.org.cash.R;
+import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.ItemRecycleTransBinding;
 import com.org.cash.model.Transaction;
 import com.org.cash.utils.Common;
@@ -40,6 +44,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         Transaction transaction = arrayList.get(position);
         holder.title.setText(transaction.getDesc());
         holder.amount.setText(String.valueOf(Common.formatCurrency(String.valueOf(transaction.getAmount().longValue()))));
+        MoneyDb db = MoneyDb.getDatabase(context);
+        Integer icon = db.categoryDao().findIconByName(transaction.getCategory());
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(()->{
+            try {
+                holder.icon.setImageResource(icon);
+            }catch (Exception e){
+                holder.icon.setImageResource(R.drawable.baseline_wallet_24);
+            }
+        });
     }
 
     @Override
@@ -52,9 +66,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title, amount;
-
+        ImageView icon;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            icon = itemView.findViewById(R.id.wallet_image);
             title = itemView.findViewById(R.id.transaction_name);
             amount = itemView.findViewById(R.id.transaction_amount);
                 itemView.setOnClickListener(new View.OnClickListener() {

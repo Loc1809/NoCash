@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Helper method to perform login (simulated API call)
     private void performLogin(String email, String password) {
-        navigateToMainActivity();
+//        navigateToMainActivity();
         AtomicReference<Call<TokenResponse>> call = new AtomicReference<>(apiService.login(email,password));
         call.get().enqueue(new Callback<TokenResponse>() {
             @Override

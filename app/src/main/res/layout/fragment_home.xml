@@ -104,13 +104,14 @@
                             android:paddingLeft="5dp"
                             android:fontFamily="@string/font_family"
                             android:text="0 Đ"/>
-                    <ImageView
+                    <ImageButton
                             android:id="@+id/home_visible_balance_button"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:backgroundTint="@color/mdtp_transparent_black"
                             android:paddingLeft="10dp"
                             android:paddingTop="3dp"
-                            android:src="@drawable/baseline_visibility_24"/>
+                            android:src="@drawable/baseline_visibility_off_24"/>
                 </LinearLayout>
 
             </LinearLayout>

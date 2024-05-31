@@ -18,25 +18,33 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
+import com.org.cash.API.ApiService;
+import com.org.cash.API.TokenManager;
 import com.org.cash.CustomToast;
 import com.org.cash.R;
 import com.org.cash.database.MoneyDb;
 import com.org.cash.databinding.FragmentHomeBinding;
 import com.org.cash.model.Transaction;
+import com.org.cash.model.User;
 import com.org.cash.model.Wallet;
 import com.org.cash.ui.add_record.AddTransactionFragment;
 import com.org.cash.ui.add_record.AddWalletFragment;
 import com.org.cash.utils.Common;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 
-
-    public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment {
         private FragmentHomeBinding binding;
         private RecyclerView recyclerView;
         private HomeViewModel homeViewModel;
@@ -48,6 +56,8 @@ import java.util.List;
         private MoneyDb db;
         private Handler hnHandler;
         private int currentMonth, currentYear;
+        private boolean canView = false;
+        private long headerAmount;
         private final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,8 +71,51 @@ import java.util.List;
                              Bundle savedInstanceState) {
         // Inflate the layout using data binding
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        binding.homeHeader.setVisibility(View.GONE);
+        String token = TokenManager.getInstance().getToken();
+        if (token != null && !token.equals("")) {
+            binding.homeHeader.setVisibility(View.VISIBLE);
+            Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+            ApiService apiService = retrofit.create(ApiService.class);
+            AtomicReference<Call<User>> call = new AtomicReference<>(apiService.fetchData(token));
+            call.get().enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    User resource = response.body();
+                    try {
+                        binding.homeUsername.setText(resource.getUsername());
+                        binding.homeBalanceAmount.setText(Common.formatCurrency("..."));
+
+                    }
+                    catch (Exception e){}
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    call.cancel();
+                }
+            });
+        } else
+            binding.homeHeader.setVisibility(View.GONE);
+
         // Access views through the binding object
+        binding.homeVisibleBalanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (canView) {
+                    binding.homeVisibleBalanceButton.setImageResource(R.drawable.baseline_visibility_off_24);
+                    binding.homeBalanceAmount.setText("...");
+                    canView = !canView;
+                } else {
+                    calBalance();
+                    binding.homeVisibleBalanceButton.setImageResource(R.drawable.baseline_visibility_24);
+                    binding.homeBalanceAmount.setText(Common.formatCurrency(String.valueOf(headerAmount)) + " đ");
+                    canView = !canView;
+                }
+            }
+        });
         uName = binding.getRoot().findViewById(R.id.home_username);
         monthTitle = binding.getRoot().findViewById(R.id.month_text);
         yearTitle = binding.getRoot().findViewById(R.id.year_text);
@@ -95,11 +148,16 @@ import java.util.List;
         homeViewModel.getWallets().observe(getViewLifecycleOwner(), new Observer<List<Wallet>>() {
             @Override
             public void onChanged(List<Wallet> wallets) {
-                if (!wallets.isEmpty()) {
-                    uName.setText(wallets.get(0).getName());
-                }
             }
         });
+    }
+
+    public void calBalance(){
+        MoneyDb.databaseWriteExecutor.execute(() -> {
+            walletsList = (ArrayList<Wallet>) db.walletDao().getWallets();
+            for (Wallet w : walletsList) {
+                headerAmount += w.getAmount();
+        }});
     }
 
     private void prepareWalletData(View rootView) {
@@ -110,11 +168,10 @@ import java.util.List;
             hnHandler = new Handler(Looper.getMainLooper());
             MoneyDb.databaseWriteExecutor.execute(() -> {
                 walletsList = (ArrayList<Wallet>) db.walletDao().getWallets();
-                Double amount = 0.0;
                 for (Wallet w : walletsList) {
-                    amount += w.getAmount();
+                    headerAmount += w.getAmount();
                 }
-                balance.setText(amount.toString());
+                binding.homeBalanceAmount.setText(Common.formatCurrency(String.valueOf(headerAmount)) + " đ");
                 hnHandler.post(() -> {
                     walletAdapter = new WalletAdapter(context, walletsList, new WalletAdapter.ClickListenner() {
                         @Override

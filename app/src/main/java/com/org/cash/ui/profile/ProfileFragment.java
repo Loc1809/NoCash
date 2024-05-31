@@ -1,6 +1,8 @@
 package com.org.cash.ui.profile;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -17,11 +19,15 @@ import android.view.ViewGroup;
 import com.org.cash.API.ApiService;
 import com.org.cash.API.TokenManager;
 import com.org.cash.CustomToast;
+import com.org.cash.LoginActivity;
+import com.org.cash.MainActivity;
 import com.org.cash.R;
 
 import com.google.android.material.navigation.NavigationView;
 import com.org.cash.model.ChangePwd;
 import com.org.cash.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +39,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ProfileFragment extends Fragment {
 
-       Retrofit retrofit = new Retrofit.Builder()
+    private static final Logger log = LoggerFactory.getLogger(ProfileFragment.class);
+    Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
@@ -52,7 +59,7 @@ public class ProfileFragment extends Fragment {
     private EditText editText_old_pwd;
     private EditText editText_reType_pwd;
     private EditText editText_new_pwd;
-    private Button save_pwd;
+    private Button save_pwd, log_out;
 
 //    private EditText editText_Name;
 //    private EditText editText_Email;
@@ -161,6 +168,20 @@ public class ProfileFragment extends Fragment {
         this.editText_old_pwd = view.findViewById(R.id.editTextTextPassword_Old);
         this.editText_reType_pwd = view.findViewById(R.id.editTextTextPassword_ReType);
         this.save_pwd = view.findViewById(R.id.button4);
+        this.log_out = view.findViewById(R.id.button3);
+
+        log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = getActivity();
+                if (context != null) {
+                    showToast("Couldn't logout yet");
+                    Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);
+                    getActivity().finish();
+                }
+            }
+        });
 
         save_pwd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

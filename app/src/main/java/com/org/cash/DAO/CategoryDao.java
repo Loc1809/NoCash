@@ -27,6 +27,9 @@ public interface CategoryDao {
     @Query("SELECT * FROM category WHERE id = :id OR name = :name LIMIT 1")
     Category findByIdOrName(int id, String name);
 
+    @Query("SELECT icon FROM category WHERE name = :name LIMIT 1")
+    Integer findIconByName(String name);
+
     @Query("SELECT * FROM category WHERE name = :name AND type = :type LIMIT 1")
     Category findByNameType(String name, int type);
 

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
              List<Transaction> list  = db.transactionDao().getTransactions();
              try {
                  if (list.size() < 1) {
-                     for (int i = 0; i < 50; i++) {
+                     for (int i = 0; i < 70; i++) {
                          Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans" + i, "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                  }
              }
              catch (Exception e){
-                 for (int i = 0; i < 50; i++) {
+                 for (int i = 0; i < 70; i++) {
                          Transaction newTransaction = new Transaction(rand.nextInt(10) * 6000.0, getRandomLongBetweenRange(1710096025000L, 1718044825000L), "Trans" + i, "Category"+rand.nextInt(20), "Wallet"+rand.nextInt(20), rand.nextInt(2));
                          MoneyDb.databaseWriteExecutor.execute(() -> {
                              db.transactionDao().insert(newTransaction);
